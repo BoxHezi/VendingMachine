@@ -11,7 +11,7 @@
  * that will be called.
  **/
 void initMenu(MenuItem *menu) {
-    printf("Menu Main:\n");
+    printf("Main Menu:\n");
     printf("1.Display Items\n");
     printf("2.Purchase Items\n");
     printf("3.Save and Exit\n");
@@ -23,7 +23,6 @@ void initMenu(MenuItem *menu) {
     printf("8.Reset Coins\n");
     printf("9.Abort Program\n");
     printf("Select your option(1-9): ");
-
 }
 
 /**
