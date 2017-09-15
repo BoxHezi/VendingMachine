@@ -11,43 +11,17 @@
  * that will be called.
  **/
 void initMenu(MenuItem *menu) {
-    strcpy(menu[0].text, "\tDisplay Items");
-    strcpy(menu[1].text, "\tPurchase Items");
-    strcpy(menu[2].text, "\tSave and Exit");
-    strcpy(menu[3].text, "\tAdd Item");
-    strcpy(menu[4].text, "\tRemove Item");
-    strcpy(menu[5].text, "\tDisplay Coins");
-    strcpy(menu[6].text, "\tReset Stocks");
-    strcpy(menu[7].text, "\tReset Coins");
-    strcpy(menu[8].text, "\tAbort Program");
+    strcpy(menu[0].text, "Display Items");
+    strcpy(menu[1].text, "Purchase Items");
+    strcpy(menu[2].text, "Save and Exit");
+    strcpy(menu[3].text, "Add Item");
+    strcpy(menu[4].text, "Remove Item");
+    strcpy(menu[5].text, "Display Coins");
+    strcpy(menu[6].text, "Reset Stocks");
+    strcpy(menu[7].text, "Reset Coins");
+    strcpy(menu[8].text, "Abort Program");
 
     getMenuChoice(menu);
-    /*
-    menu[0].text = "Display Items";
-    menu[1].text = "Purchase Items";
-    menu[2].text = "Save and Exit";
-    menu[3].text = "Add Item";
-    menu[4].text = "Remove Item";
-    menu[5].text = "Display Coins";
-    menu[6].text = "Reset Stock";
-    menu[7].text = "Reset Coins";
-    menu[8].text = "Abort Program";
-    */
-
-    /*
-    printf("Main Menu:\n");
-    printf("1.Display Items\n");
-    printf("2.Purchase Items\n");
-    printf("3.Save and Exit\n");
-    printf("Administrator-Only Menu:\n");
-    printf("4.Add Item\n");
-    printf("5.Remove Item\n");
-    printf("6.Display Coins\n");
-    printf("7.Reset Stock\n");
-    printf("8.Reset Coins\n");
-    printf("9.Abort Program\n");
-    printf("Select your option(1-9): ");
-*/
 }
 
 /**
@@ -115,7 +89,7 @@ void printMenu(MenuItem *menu) {
             count++;
             i--;
         } else {
-            printf("%d. %s\n", i + 1, menu[i].text);
+            printf("\t%d. %s\n", i + 1, menu[i].text);
         }
     }
 }
