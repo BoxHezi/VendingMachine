@@ -73,7 +73,12 @@ Boolean saveCoins(VmSystem * system)
  * This is the data loaded into the linked list in the requirement 2.
  **/
 void displayItems(VmSystem * system)
-{ }
+{
+    char stockfile[20] =  "stock.dat";
+    char coinsfile[20] = "coins.dat";
+    loadData(system, stockfile, coinsfile);
+    printf("ID|ItemName|ItemDesc|Price|NumberOnHand\n");
+}
 
 /**
  * This option allows the user to purchase an item.

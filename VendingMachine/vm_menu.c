@@ -1,5 +1,8 @@
 #include "vm_menu.h"
 
+#define STOCK_DATA "stock.dat"
+#define COIN_DATA "coins.dat"
+
 /**
  * vm_menu.c handles the initialisation and management of the menu array.
  **/
@@ -33,6 +36,7 @@ MenuFunction getMenuChoice(MenuItem *menu) {
     char optionInput[1 + EXTRA_SPACES];
     int option = 0;
     Boolean validInput = FALSE;
+    VmSystem vendingMachine;
 
     do {
         printMenu(menu);
@@ -48,7 +52,7 @@ MenuFunction getMenuChoice(MenuItem *menu) {
             option = strtol(optionInput, NULL, 10);
 
             if (option == 1) {
-
+                displayItems(&vendingMachine);
             } else if (option == 2) {
 
             } else if (option == 3) {
