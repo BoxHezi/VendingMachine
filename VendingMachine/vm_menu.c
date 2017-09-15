@@ -11,6 +11,30 @@
  * that will be called.
  **/
 void initMenu(MenuItem *menu) {
+    strcpy(menu[0].text, "\tDisplay Items");
+    strcpy(menu[1].text, "\tPurchase Items");
+    strcpy(menu[2].text, "\tSave and Exit");
+    strcpy(menu[3].text, "\tAdd Item");
+    strcpy(menu[4].text, "\tRemove Item");
+    strcpy(menu[5].text, "\tDisplay Coins");
+    strcpy(menu[6].text, "\tReset Stocks");
+    strcpy(menu[7].text, "\tReset Coins");
+    strcpy(menu[8].text, "\tAbort Program");
+
+    getMenuChoice(menu);
+    /*
+    menu[0].text = "Display Items";
+    menu[1].text = "Purchase Items";
+    menu[2].text = "Save and Exit";
+    menu[3].text = "Add Item";
+    menu[4].text = "Remove Item";
+    menu[5].text = "Display Coins";
+    menu[6].text = "Reset Stock";
+    menu[7].text = "Reset Coins";
+    menu[8].text = "Abort Program";
+    */
+
+    /*
     printf("Main Menu:\n");
     printf("1.Display Items\n");
     printf("2.Purchase Items\n");
@@ -23,6 +47,7 @@ void initMenu(MenuItem *menu) {
     printf("8.Reset Coins\n");
     printf("9.Abort Program\n");
     printf("Select your option(1-9): ");
+*/
 }
 
 /**
@@ -36,7 +61,8 @@ MenuFunction getMenuChoice(MenuItem *menu) {
     Boolean validInput = FALSE;
 
     do {
-        initMenu(&menu);
+        printMenu(menu);
+        printf("Select your option(1-9): ");
         fgets(optionInput, sizeof(optionInput), stdin);
 
         /* check buffer overflow */
@@ -73,4 +99,23 @@ MenuFunction getMenuChoice(MenuItem *menu) {
 
     } while (!validInput);
     return NULL;
+}
+
+void printMenu(MenuItem *menu) {
+    int i;
+    int count = 0;
+
+    for (i = 0; i < 9; i++) {
+        if (count == 0 && i == 0) {
+            puts("Main Menu:");
+            count++;
+            i--;
+        } else if (count == 1 && i == 3) {
+            puts("Administrator-Only Menu:");
+            count++;
+            i--;
+        } else {
+            printf("%d. %s\n", i + 1, menu[i].text);
+        }
+    }
 }
