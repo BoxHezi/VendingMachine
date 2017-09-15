@@ -33,6 +33,11 @@ void systemFree(VmSystem * system)
 Boolean loadData(
     VmSystem * system, const char * stockFileName, const char * coinsFileName)
 {
+
+
+
+
+
     return FALSE;
 }
 
@@ -77,7 +82,7 @@ void displayItems(VmSystem * system)
     char stockfile[20] =  "stock.dat";
     char coinsfile[20] = "coins.dat";
     loadData(system, stockfile, coinsfile);
-    printf("ID|ItemName|ItemDesc|Price|NumberOnHand\n");
+    printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
 }
 
 /**
