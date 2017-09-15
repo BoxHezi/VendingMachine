@@ -27,6 +27,25 @@ void initMenu(MenuItem *menu) {
     getMenuChoice(menu);
 }
 
+void printMenu(MenuItem *menu) {
+    int i;
+    int count = 0;
+
+    for (i = 0; i < 9; i++) {
+        if (count == 0 && i == 0) {
+            puts("Main Menu:");
+            count++;
+            i--;
+        } else if (count == 1 && i == 3) {
+            puts("Administrator-Only Menu:");
+            count++;
+            i--;
+        } else {
+            printf("\t%d. %s\n", i + 1, menu[i].text);
+        }
+    }
+}
+
 /**
  * Gets input from the user and returns a pointer to the MenuFunction
  * that defines how to perform the user's selection. NULL is returned
@@ -77,23 +96,4 @@ MenuFunction getMenuChoice(MenuItem *menu) {
 
     } while (!validInput);
     return NULL;
-}
-
-void printMenu(MenuItem *menu) {
-    int i;
-    int count = 0;
-
-    for (i = 0; i < 9; i++) {
-        if (count == 0 && i == 0) {
-            puts("Main Menu:");
-            count++;
-            i--;
-        } else if (count == 1 && i == 3) {
-            puts("Administrator-Only Menu:");
-            count++;
-            i--;
-        } else {
-            printf("\t%d. %s\n", i + 1, menu[i].text);
-        }
-    }
 }
