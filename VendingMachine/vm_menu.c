@@ -40,10 +40,12 @@ MenuFunction getMenuChoice(MenuItem *menu) {
         initMenu(&menu);
         fgets(optionInput, sizeof(optionInput), stdin);
 
+        /* check buffer overflow */
         if (optionInput[strlen(optionInput) - 1] != '\n') {
             printf("Invalid, try again\n");
             readRestOfLine();
         } else {
+            /* convert user input to int */
             option = strtol(optionInput, NULL, 10);
 
             if (option == 1) {
