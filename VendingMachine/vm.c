@@ -11,9 +11,9 @@ int main(int argc, char **argv) {
         printf("Missing Files!\n");
         return EXIT_FAILURE;
     }
-    if (!loadData(&vendingSystem, argv[1], NULL)) {
+    if (!loadData(&vendingSystem, argv[1], argv[2])) {
         printf("File load failed!\n");
-        return EXIT_FAILURE;
+        exit(1);
     }
 
     while (TRUE) {

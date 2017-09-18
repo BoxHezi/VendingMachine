@@ -36,8 +36,8 @@ void systemFree(VmSystem * system)
 Boolean loadData(
     VmSystem * system, const char * stockFileName, const char * coinsFileName)
 {
-
-
+    system->stockFileName = stockFileName;
+    system->coinFileName = coinsFileName;
     return TRUE;
 }
 
@@ -46,8 +46,16 @@ Boolean loadData(
  **/
 Boolean loadStock(VmSystem * system, const char * fileName)
 {
+    /* load stock file */
+    FILE *stockFile;
+    stockFile = fopen(fileName, "r");
 
-    return FALSE;
+    if (stockFile == NULL) {
+        return FALSE;
+    }
+
+    fclose(stockFile);
+    return TRUE;
 }
 
 /**
