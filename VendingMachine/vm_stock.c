@@ -9,3 +9,7 @@
  * Some example functions:
  * create list, free list, create node, free node, insert node, etc...
  */
+
+void initStockList() {
+    FILE *stockFile = malloc(sizeof(stockFile));
+}
