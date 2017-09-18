@@ -13,7 +13,10 @@
  **/
 Boolean systemInit(VmSystem * system)
 {
-    return FALSE;
+    system->stockFileName = NULL;
+    system->coinFileName = NULL;
+
+    return TRUE;
 }
 
 /**
@@ -35,10 +38,7 @@ Boolean loadData(
 {
 
 
-
-
-
-    return FALSE;
+    return TRUE;
 }
 
 /**
@@ -46,6 +46,8 @@ Boolean loadData(
  **/
 Boolean loadStock(VmSystem * system, const char * fileName)
 {
+    FILE
+
     return FALSE;
 }
 
@@ -79,10 +81,9 @@ Boolean saveCoins(VmSystem * system)
  **/
 void displayItems(VmSystem * system)
 {
-    char stockfile[20] =  "stock.dat";
-    char coinsfile[20] = "coins.dat";
-    loadData(system, stockfile, coinsfile);
     printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
+
+    /* <ID>|<NAME>|<DESCRIPTION>|<DOLLARS>.<CENTS>|<QUANTITY> */
 }
 
 /**
