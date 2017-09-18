@@ -46,7 +46,6 @@ Boolean loadData(
  **/
 Boolean loadStock(VmSystem * system, const char * fileName)
 {
-    FILE
 
     return FALSE;
 }

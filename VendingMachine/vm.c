@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
     VmSystem vendingSystem;
     MenuItem menu[MENU_LENGTH];
 
-    systemInit(&system);
+    systemInit(&vendingSystem);
     if (argc != 3) {
         printf("Missing Files!\n");
         return EXIT_FAILURE;

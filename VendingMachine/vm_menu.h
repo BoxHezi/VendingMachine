@@ -25,5 +25,5 @@ typedef struct menu_item
 
 void initMenu(MenuItem * menu);
 MenuFunction getMenuChoice(MenuItem * menu);
-
+void printMenu(MenuItem *menu);
 #endif
