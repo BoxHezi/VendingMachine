@@ -23,8 +23,6 @@ void initMenu(MenuItem *menu) {
     strcpy(menu[6].text, "Reset Stocks");
     strcpy(menu[7].text, "Reset Coins");
     strcpy(menu[8].text, "Abort Program");
-
-    getMenuChoice(menu);
 }
 
 void printMenu(MenuItem *menu) {
@@ -54,10 +52,9 @@ void printMenu(MenuItem *menu) {
 MenuFunction getMenuChoice(MenuItem *menu) {
     char optionInput[1 + EXTRA_SPACES];
     int option = 0;
-    Boolean validInput = FALSE;
     VmSystem vendingMachine;
 
-    do {
+    while (TRUE) {
         printMenu(menu);
         printf("Select your option(1-9): ");
         fgets(optionInput, sizeof(optionInput), stdin);
@@ -88,12 +85,13 @@ MenuFunction getMenuChoice(MenuItem *menu) {
 
             } else if (option == 9) {
                 printf("Aborting...\n");
-                validInput = TRUE;
+                abortProgram(&vendingMachine);
+                exit(1);
             } else {
                 printf("Invalid, try again\n");
             }
         }
 
-    } while (!validInput);
+    }
     return NULL;
 }

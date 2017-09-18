@@ -16,7 +16,10 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    initMenu(menu);
+    while (TRUE) {
+        initMenu(menu);
+        getMenuChoice(menu);
+    }
 
     printf("Goodbye. \n\n");
 

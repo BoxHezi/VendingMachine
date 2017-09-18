@@ -147,4 +147,6 @@ void resetCoins(VmSystem * system)
  * This function implements requirement 10 of the assignment specification.
  **/
 void abortProgram(VmSystem * system)
-{ }
+{
+    systemFree(system);
+}
