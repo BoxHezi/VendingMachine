@@ -11,8 +11,7 @@
  * Initialise the system to a known safe state. Look at the structure
  * defined in vm_system.h.
  **/
-Boolean systemInit(VmSystem * system)
-{
+Boolean systemInit(VmSystem *system) {
     system->stockFileName = NULL;
     system->coinFileName = NULL;
 
@@ -24,8 +23,9 @@ Boolean systemInit(VmSystem * system)
  * find all your memory leaks, compile your program with the -g flag
  * and run it through valgrind.
  **/
-void systemFree(VmSystem * system)
-{ }
+void systemFree(VmSystem *system) {
+    systemFree(system);
+}
 
 /**
  * Loads the stock and coin data into the system. You will also need to assign
@@ -34,8 +34,7 @@ void systemFree(VmSystem * system)
  * validation. A substantial number of marks are allocated to this function.
  **/
 Boolean loadData(
-    VmSystem * system, const char * stockFileName, const char * coinsFileName)
-{
+        VmSystem *system, const char *stockFileName, const char *coinsFileName) {
     system->stockFileName = stockFileName;
     system->coinFileName = coinsFileName;
     return TRUE;
@@ -44,8 +43,7 @@ Boolean loadData(
 /**
  * Loads the stock file data into the system.
  **/
-Boolean loadStock(VmSystem * system, const char * fileName)
-{
+Boolean loadStock(VmSystem *system, const char *fileName) {
     /* load stock file */
     FILE *stockFile;
     stockFile = fopen(fileName, "r");
@@ -64,8 +62,7 @@ Boolean loadStock(VmSystem * system, const char * fileName)
 /**
  * Loads the coin file data into the system.
  **/
-Boolean loadCoins(VmSystem * system, const char * fileName)
-{
+Boolean loadCoins(VmSystem *system, const char *fileName) {
     FILE *coinsFile;
     coinsFile = fopen(fileName, "r");
 
@@ -83,16 +80,14 @@ Boolean loadCoins(VmSystem * system, const char * fileName)
 /**
  * Saves all the stock back to the stock file.
  **/
-Boolean saveStock(VmSystem * system)
-{
+Boolean saveStock(VmSystem *system) {
     return FALSE;
 }
 
 /**
  * Saves all the coins back to the coins file.
  **/
-Boolean saveCoins(VmSystem * system)
-{
+Boolean saveCoins(VmSystem *system) {
     return FALSE;
 }
 
@@ -100,9 +95,19 @@ Boolean saveCoins(VmSystem * system)
  * This option allows the user to display the items in the system.
  * This is the data loaded into the linked list in the requirement 2.
  **/
-void displayItems(VmSystem * system)
-{
+void displayItems(VmSystem *system) {
+    Node *current = NULL;
+
     printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
+
+    printf("%s|%s|%s|%s|%d|%d", current->data->id, current->data->name, current->data->desc, 1, 1);
+    strcpy(current->data->id, strtok(system->stockFileName, STOCK_DELIM));
+    strcpy(current->data->name, strtok(NULL, STOCK_DELIM));
+    strcpy(current->data->desc, strtok(NULL, STOCK_DELIM));
+    strcpy(current->data->price.dollars, strtok(NULL, "."));
+    strcpy(current->data->price.cents, strtok(NULL, STOCK_DELIM));
+    strcpy(current->data->onHand, strtok(NULL, STOCK_DELIM));
+
 
     /* <ID>|<NAME>|<DESCRIPTION>|<DOLLARS>.<CENTS>|<QUANTITY> */
 }
@@ -111,30 +116,26 @@ void displayItems(VmSystem * system)
  * This option allows the user to purchase an item.
  * This function implements requirement 5 of the assignment specification.
  **/
-void purchaseItem(VmSystem * system)
-{ }
+void purchaseItem(VmSystem *system) {}
 
 /**
  * You must save all data to the data files that were provided on the command
  * line when the program loaded up, display goodbye and free the system.
  * This function implements requirement 6 of the assignment specification.
  **/
-void saveAndExit(VmSystem * system)
-{ }
+void saveAndExit(VmSystem *system) {}
 
 /**
  * This option adds an item to the system. This function implements
  * requirement 7 of of assignment specification.
  **/
-void addItem(VmSystem * system)
-{ }
+void addItem(VmSystem *system) {}
 
 /**
  * Remove an item from the system, including free'ing its memory.
  * This function implements requirement 8 of the assignment specification.
  **/
-void removeItem(VmSystem * system)
-{ }
+void removeItem(VmSystem *system) {}
 
 /**
  * This option will require you to display the coins from lowest to highest
@@ -142,8 +143,7 @@ void removeItem(VmSystem * system)
  * This function implements part 4 of requirement 18 in the assignment
  * specifications.
  **/
-void displayCoins(VmSystem * system)
-{ }
+void displayCoins(VmSystem *system) {}
 
 /**
  * This option will require you to iterate over every stock in the
@@ -151,8 +151,7 @@ void displayCoins(VmSystem * system)
  * the startup code.
  * This function implements requirement 9 of the assignment specification.
  **/
-void resetStock(VmSystem * system)
-{ }
+void resetStock(VmSystem *system) {}
 
 /**
  * This option will require you to iterate over every coin in the coin
@@ -161,14 +160,12 @@ void resetStock(VmSystem * system)
  * This requirement implements part 3 of requirement 18 in the
  * assignment specifications.
  **/
-void resetCoins(VmSystem * system)
-{ }
+void resetCoins(VmSystem *system) {}
 
 /**
  * This option will require you to display goodbye and free the system.
  * This function implements requirement 10 of the assignment specification.
  **/
-void abortProgram(VmSystem * system)
-{
+void abortProgram(VmSystem *system) {
     systemFree(system);
 }

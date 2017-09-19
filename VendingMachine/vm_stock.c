@@ -10,6 +10,3 @@
  * create list, free list, create node, free node, insert node, etc...
  */
 
-void initStockList() {
-    Node *stockFile = malloc(sizeof(stockFile));
-}

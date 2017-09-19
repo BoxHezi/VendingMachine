@@ -69,6 +69,7 @@ MenuFunction getMenuChoice(MenuItem *menu) {
 
             if (option == 1) {
                 displayItems(&vendingMachine);
+                return menu[option - 1].function;
             } else if (option == 2) {
 
             } else if (option == 3) {

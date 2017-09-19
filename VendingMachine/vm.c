@@ -20,8 +20,8 @@ int main(int argc, char **argv) {
     }
     loadCoins(&vendingSystem, argv[2]);
 
+    initMenu(menu);
     while (TRUE) {
-        initMenu(menu);
         getMenuChoice(menu);
     }
 
