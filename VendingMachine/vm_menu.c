@@ -65,7 +65,7 @@ MenuFunction getMenuChoice(MenuItem *menu) {
             readRestOfLine();
         } else {
             /* convert user input to int */
-            option = strtol(optionInput, NULL, 10);
+            option = (int) strtol(optionInput, NULL, 10);
 
             if (option == 1) {
                 displayItems(&vendingMachine);
@@ -86,7 +86,7 @@ MenuFunction getMenuChoice(MenuItem *menu) {
 
             } else if (option == 9) {
                 printf("Aborting...\n");
-                abortProgram(&vendingMachine);
+
                 exit(1);
             } else {
                 printf("Invalid, try again\n");
