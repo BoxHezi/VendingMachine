@@ -15,6 +15,10 @@ int main(int argc, char **argv) {
         printf("File load failed!\n");
         exit(1);
     }
+    if(!loadStock(&vendingSystem, argv[1])) {
+        return EXIT_FAILURE;
+    }
+    loadCoins(&vendingSystem, argv[2]);
 
     while (TRUE) {
         initMenu(menu);

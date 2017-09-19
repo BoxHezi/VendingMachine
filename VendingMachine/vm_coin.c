@@ -10,3 +10,7 @@
  * init coins array, insert coin, change coin count for Denomination,
  * convert Denomination to coin value, deducting coins from register, etc...
  */
+
+void initCoinsList() {
+    FILE *coinsFile = malloc(sizeof(coinsFile));
+}

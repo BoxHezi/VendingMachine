@@ -51,8 +51,11 @@ Boolean loadStock(VmSystem * system, const char * fileName)
     stockFile = fopen(fileName, "r");
 
     if (stockFile == NULL) {
+        printf("No stock!\n");
         return FALSE;
     }
+
+    system->stockFileName = fileName;
 
     fclose(stockFile);
     return TRUE;
@@ -63,7 +66,18 @@ Boolean loadStock(VmSystem * system, const char * fileName)
  **/
 Boolean loadCoins(VmSystem * system, const char * fileName)
 {
-    return FALSE;
+    FILE *coinsFile;
+    coinsFile = fopen(fileName, "r");
+
+    if (coinsFile == NULL) {
+        printf("No coins");
+        return FALSE;
+    }
+
+    system->coinFileName = fileName;
+
+    fclose(coinsFile);
+    return TRUE;
 }
 
 /**

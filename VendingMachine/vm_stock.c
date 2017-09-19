@@ -11,5 +11,5 @@
  */
 
 void initStockList() {
-    FILE *stockFile = malloc(sizeof(stockFile));
+    Node *stockFile = malloc(sizeof(stockFile));
 }
