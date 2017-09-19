@@ -51,7 +51,7 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
     stockFile = fopen(fileName, "r");
 
     if (stockFile == NULL) {
-        printf("No stock!\n");
+        printf("No stock file found!\n");
         return FALSE;
     }
 
@@ -69,7 +69,7 @@ Boolean loadCoins(VmSystem *system, const char *fileName) {
     coinsFile = fopen(fileName, "r");
 
     if (coinsFile == NULL) {
-        printf("No coins");
+        printf("No coins file found");
         return FALSE;
     }
 
@@ -98,7 +98,6 @@ Boolean saveCoins(VmSystem *system) {
  * This is the data loaded into the linked list in the requirement 2.
  **/
 void displayItems(VmSystem *system) {
-
     Node *node = NULL;
     printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
 
