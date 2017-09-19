@@ -12,6 +12,8 @@
  * defined in vm_system.h.
  **/
 Boolean systemInit(VmSystem *system) {
+    system->itemList = initList();
+    initCoins(system->cashRegister);
     system->stockFileName = NULL;
     system->coinFileName = NULL;
 
@@ -96,18 +98,11 @@ Boolean saveCoins(VmSystem *system) {
  * This is the data loaded into the linked list in the requirement 2.
  **/
 void displayItems(VmSystem *system) {
-    Node *current = NULL;
-    Node *nextNode;
-    List *head = NULL;
-    head = malloc(sizeof(List));
 
-    current->next = nextNode;
-    nextNode = current;
-
+    Node *node = NULL;
     printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
 
-    printf("%s|%s|%s|%d.%d|%d", current->data->id, current->data->name, current->data->desc,
-           current->data->price.dollars, current->data->price.cents, 1);
+    printStockList(node);
 
     /* <ID>|<NAME>|<DESCRIPTION>|<DOLLARS>.<CENTS>|<QUANTITY> */
 }

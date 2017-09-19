@@ -10,4 +10,6 @@
 
 #define COIN_DELIM ","
 
+void initCoins(Coin *cashRegister);
+
 #endif
