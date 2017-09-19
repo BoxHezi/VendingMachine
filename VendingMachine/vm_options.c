@@ -97,17 +97,17 @@ Boolean saveCoins(VmSystem *system) {
  **/
 void displayItems(VmSystem *system) {
     Node *current = NULL;
+    Node *nextNode;
+    List *head = NULL;
+    head = malloc(sizeof(List));
+
+    current->next = nextNode;
+    nextNode = current;
 
     printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
 
-    printf("%s|%s|%s|%s|%d|%d", current->data->id, current->data->name, current->data->desc, 1, 1);
-    strcpy(current->data->id, strtok(system->stockFileName, STOCK_DELIM));
-    strcpy(current->data->name, strtok(NULL, STOCK_DELIM));
-    strcpy(current->data->desc, strtok(NULL, STOCK_DELIM));
-    strcpy(current->data->price.dollars, strtok(NULL, "."));
-    strcpy(current->data->price.cents, strtok(NULL, STOCK_DELIM));
-    strcpy(current->data->onHand, strtok(NULL, STOCK_DELIM));
-
+    printf("%s|%s|%s|%d.%d|%d", current->data->id, current->data->name, current->data->desc,
+           current->data->price.dollars, current->data->price.cents, 1);
 
     /* <ID>|<NAME>|<DESCRIPTION>|<DOLLARS>.<CENTS>|<QUANTITY> */
 }
