@@ -46,7 +46,7 @@ Boolean loadData(
  * Loads the stock file data into the system.
  **/
 Boolean loadStock(VmSystem *system, const char *fileName) {
-    char data[512] = "";
+    char data[512];
 
     /* load stock file */
     FILE *stockFile;
@@ -61,11 +61,11 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
 
     /* while the file has next line */
     while (fgets(data, sizeof(data), stockFile) != NULL) {
-
         Node *node = malloc(sizeof(Node));
 
         Stock *stock = malloc(sizeof(Stock));
         assignValueToStock(data, stock);
+        createNode(stock, node);
         addToList(system->itemList, node);
     }
 
@@ -206,9 +206,9 @@ void assignValueToStock(char *data, Stock *stock) {
     dollarInString = strtok(priceInString, ".");
     centInString = strtok(NULL, ".");
 
-    dollars = strtol(dollarInString, NULL, 10);
-    cents = strtol(centInString, NULL, 10);
-    onHand = strtol(onHandInString, NULL, 10);
+    dollars = (unsigned) strtol(dollarInString, NULL, 10);
+    cents = (unsigned) strtol(centInString, NULL, 10);
+    onHand = (unsigned) strtol(onHandInString, NULL, 10);
 
     strcpy(stock->id, id);
     strcpy(stock->name, name);
@@ -221,6 +221,5 @@ void assignValueToStock(char *data, Stock *stock) {
 
 void addToList(List *list, Node *node) {
     list->head = node;
-
     list->size++;
 }

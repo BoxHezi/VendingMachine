@@ -40,4 +40,6 @@ void assignValueToStock(char *line, Stock *stock);
 
 void addToList(List *list, Node *node);
 
+void createNode(Stock *data, Node *next);
+
 #endif

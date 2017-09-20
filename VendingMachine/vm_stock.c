@@ -23,20 +23,35 @@ List *initList() {
     return list;
 }
 
+Node *createNode(Stock *data, Node *next) {
+    Node *newNode = malloc(sizeof(Node));
+    if (newNode == NULL) {
+        printf("Error, can't create a new node!\n");
+        exit(EXIT_FAILURE);
+    }
+    newNode->data = data;
+    if (next == NULL) {
+        newNode->next=NULL;
+    }
+    newNode->next = next;
+
+    return newNode;
+}
 
 /* print stock list */
 void printStockList(Node *start) {
+    Node *currentItem = start;
 
-    if (start == NULL) {
-        start = start->next;
+    if (currentItem == NULL) {
+        currentItem = currentItem->next;
     }
 
-    while (start != NULL) {
+    while (currentItem != NULL) {
 
-        printf("%s|%s|%s|%d.%d|%d", start->data->id, start->data->name, start->data->desc,
-               start->data->price.dollars, start->data->price.cents, start->data->onHand);
+        printf("%s|%s|%s|%d.%d|%d", currentItem->data->id, currentItem->data->name, currentItem->data->desc,
+               currentItem->data->price.dollars, currentItem->data->price.cents, currentItem->data->onHand);
 
-        start = start->next;
+        currentItem = currentItem->next;
     }
     printf("\n");
 }
