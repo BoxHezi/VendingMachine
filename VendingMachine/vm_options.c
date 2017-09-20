@@ -26,7 +26,7 @@ Boolean systemInit(VmSystem *system) {
  * and run it through valgrind.
  **/
 void systemFree(VmSystem *system) {
-    systemFree(system);
+    free(system->itemList);
 }
 
 /**
@@ -46,6 +46,8 @@ Boolean loadData(
  * Loads the stock file data into the system.
  **/
 Boolean loadStock(VmSystem *system, const char *fileName) {
+    char data[512];
+
     /* load stock file */
     FILE *stockFile;
     stockFile = fopen(fileName, "r");
@@ -56,6 +58,15 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
     }
 
     system->stockFileName = fileName;
+
+    /* while the file has next line */
+    while (fgets(data, 100, stockFile) != NULL) {
+        Node *node = malloc(sizeof(Node));
+        List *stockList = malloc(sizeof(List));
+        Stock *stock = malloc(sizeof(Stock));
+        assignValueToNode(data, stock);
+        /* addToList(stockList, node); */
+    }
 
     fclose(stockFile);
     return TRUE;
@@ -98,10 +109,12 @@ Boolean saveCoins(VmSystem *system) {
  * This is the data loaded into the linked list in the requirement 2.
  **/
 void displayItems(VmSystem *system) {
-    Node *node = NULL;
+    Node *cursor = malloc(sizeof(cursor));
+
+
     printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
 
-    printStockList(node);
+    printStockList(cursor);
 
     /* <ID>|<NAME>|<DESCRIPTION>|<DOLLARS>.<CENTS>|<QUANTITY> */
 }
@@ -117,7 +130,12 @@ void purchaseItem(VmSystem *system) {}
  * line when the program loaded up, display goodbye and free the system.
  * This function implements requirement 6 of the assignment specification.
  **/
-void saveAndExit(VmSystem *system) {}
+void saveAndExit(VmSystem *system) {
+    saveStock(system);
+    saveCoins(system);
+
+    exit(EXIT_SUCCESS);
+}
 
 /**
  * This option adds an item to the system. This function implements
@@ -161,5 +179,45 @@ void resetCoins(VmSystem *system) {}
  * This function implements requirement 10 of the assignment specification.
  **/
 void abortProgram(VmSystem *system) {
+    printf("Aborting...\n");
     systemFree(system);
+    exit(0);
+}
+
+void assignValueToNode(char *line, Stock *stock) {
+    char *id;
+    char *name;
+    char *desc;
+    char *dollarInString;
+    char *centInString;
+    char *onHandInString;
+
+    unsigned dollars;
+    unsigned cents;
+    unsigned onHand;
+
+    id = strtok(line, STOCK_DELIM);
+    name = strtok(NULL, STOCK_DELIM);
+    desc = strtok(NULL, STOCK_DELIM);
+    dollarInString = strtok(NULL, ".");
+    centInString = strtok(NULL, STOCK_DELIM);
+    onHandInString = strtok(NULL, STOCK_DELIM);
+
+    dollars = (unsigned) strtol(dollarInString, NULL, 10);
+    cents = (unsigned) strtol(centInString, NULL, 10);
+    onHand = (unsigned) strtol(onHandInString, NULL, 10);
+
+    strcpy(stock->id, id);
+    strcpy(stock->name, name);
+    strcpy(stock->desc, desc);
+    stock->price.dollars = dollars;
+    stock->price.cents = cents;
+    stock->onHand = onHand;
+    printf("Stock added!\n");
+}
+
+void addToList(List *list, Node *node) {
+    list->head = node;
+
+    list->size++;
 }

@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     }
     if (!loadData(&vendingSystem, argv[1], argv[2])) {
         printf("File load failed!\n");
-        exit(1);
+        exit(0);
     }
     if(!loadStock(&vendingSystem, argv[1])) {
         return EXIT_FAILURE;
@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 
     initMenu(menu);
     while (TRUE) {
-        getMenuChoice(menu);
+        getMenuChoice(menu)(&vendingSystem);
     }
 
     printf("Goodbye. \n\n");

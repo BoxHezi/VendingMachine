@@ -14,6 +14,18 @@
  * that will be called.
  **/
 void initMenu(MenuItem *menu) {
+    /* initialize menu function */
+    menu[0].function = displayItems;
+    menu[1].function = purchaseItem;
+    menu[2].function = saveAndExit;
+    menu[3].function = addItem;
+    menu[4].function = removeItem;
+    menu[5].function = displayCoins;
+    menu[6].function = resetStock;
+    menu[7].function = resetCoins;
+    menu[8].function = abortProgram;
+
+
     strcpy(menu[0].text, "Display Items");
     strcpy(menu[1].text, "Purchase Items");
     strcpy(menu[2].text, "Save and Exit");
@@ -52,7 +64,6 @@ void printMenu(MenuItem *menu) {
 MenuFunction getMenuChoice(MenuItem *menu) {
     char optionInput[1 + EXTRA_SPACES];
     int option = 0;
-    VmSystem vendingMachine;
 
     while (TRUE) {
         printMenu(menu);
@@ -68,7 +79,6 @@ MenuFunction getMenuChoice(MenuItem *menu) {
             option = (int) strtol(optionInput, NULL, 10);
 
             if (option == 1) {
-                displayItems(&vendingMachine);
                 return menu[option - 1].function;
             } else if (option == 2) {
 
@@ -85,9 +95,7 @@ MenuFunction getMenuChoice(MenuItem *menu) {
             } else if (option == 8) {
 
             } else if (option == 9) {
-                printf("Aborting...\n");
-
-                exit(1);
+                return menu[option - 1].function;
             } else {
                 printf("Invalid, try again\n");
             }

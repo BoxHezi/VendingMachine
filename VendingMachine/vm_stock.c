@@ -29,6 +29,7 @@ List *initList() {
 void printStockList(Node *start) {
     Node *currentItem = start;
 
+    currentItem = currentItem->next;
     while (currentItem != NULL) {
 
         printf("%s|%s|%s|%d.%d|%d", currentItem->data->id, currentItem->data->name, currentItem->data->desc,

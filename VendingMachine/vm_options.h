@@ -36,4 +36,8 @@ void resetCoins(VmSystem *system);
 
 void abortProgram(VmSystem *system);
 
+void assignValueToNode(char *line, Stock *stock);
+
+void addToList(List *list, Node *node);
+
 #endif
