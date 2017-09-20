@@ -15,4 +15,10 @@ void printStockList(Node *start);
 
 List *initList();
 
+void addToList(List *list, Node *node);
+
+void assignValueToStock(char *data, Stock *stock);
+
+Node *createNode(Stock *stock, Node *node);
+
 #endif

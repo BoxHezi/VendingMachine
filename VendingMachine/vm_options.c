@@ -1,5 +1,6 @@
 #include "vm_options.h"
 
+#define MAX_DATA_LENGTH 512
 /**
  * vm_options.c this is where you need to implement the system handling
  * functions (e.g., init, free, load, save) and the main options for
@@ -46,7 +47,7 @@ Boolean loadData(
  * Loads the stock file data into the system.
  **/
 Boolean loadStock(VmSystem *system, const char *fileName) {
-    char data[512];
+    char data[MAX_DATA_LENGTH];
 
     /* load stock file */
     FILE *stockFile;
@@ -62,9 +63,9 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
     /* while the file has next line */
     while (fgets(data, sizeof(data), stockFile) != NULL) {
         Node *node = malloc(sizeof(Node));
-
         Stock *stock = malloc(sizeof(Stock));
         assignValueToStock(data, stock);
+
         createNode(stock, node);
         addToList(system->itemList, node);
     }
@@ -181,45 +182,4 @@ void abortProgram(VmSystem *system) {
     printf("Aborting...\n");
     systemFree(system);
     exit(0);
-}
-
-void assignValueToStock(char *data, Stock *stock) {
-    char *id;
-    char *name;
-    char *desc;
-    char *priceInString;
-    char *dollarInString;
-    char *centInString;
-
-    char *onHandInString;
-
-    unsigned dollars;
-    unsigned cents;
-    unsigned onHand;
-
-    id = strtok(data, STOCK_DELIM);
-    name = strtok(NULL, STOCK_DELIM);
-    desc = strtok(NULL, STOCK_DELIM);
-    priceInString = strtok(NULL, STOCK_DELIM);
-    onHandInString = strtok(NULL, STOCK_DELIM);
-
-    dollarInString = strtok(priceInString, ".");
-    centInString = strtok(NULL, ".");
-
-    dollars = (unsigned) strtol(dollarInString, NULL, 10);
-    cents = (unsigned) strtol(centInString, NULL, 10);
-    onHand = (unsigned) strtol(onHandInString, NULL, 10);
-
-    strcpy(stock->id, id);
-    strcpy(stock->name, name);
-    strcpy(stock->desc, desc);
-    stock->price.dollars = dollars;
-    stock->price.cents = cents;
-    stock->onHand = onHand;
-    printf("Stock added!\n");
-}
-
-void addToList(List *list, Node *node) {
-    list->head = node;
-    list->size++;
 }
