@@ -10,9 +10,8 @@
  * create list, free list, create node, free node, insert node, etc...
  */
 
-
+/* initialize list */
 List *initList() {
-    /* initialize list */
     List *list = malloc(sizeof(*list));
     if (list == NULL) {
         exit(EXIT_SUCCESS);
@@ -27,15 +26,17 @@ List *initList() {
 
 /* print stock list */
 void printStockList(Node *start) {
-    Node *currentItem = start;
 
-    currentItem = currentItem->next;
-    while (currentItem != NULL) {
+    if (start == NULL) {
+        start = start->next;
+    }
 
-        printf("%s|%s|%s|%d.%d|%d", currentItem->data->id, currentItem->data->name, currentItem->data->desc,
-               currentItem->data->price.dollars, currentItem->data->price.cents, currentItem->data->onHand);
+    while (start != NULL) {
 
-        currentItem = currentItem->next;
+        printf("%s|%s|%s|%d.%d|%d", start->data->id, start->data->name, start->data->desc,
+               start->data->price.dollars, start->data->price.cents, start->data->onHand);
+
+        start = start->next;
     }
     printf("\n");
 }

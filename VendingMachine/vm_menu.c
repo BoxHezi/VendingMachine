@@ -81,19 +81,19 @@ MenuFunction getMenuChoice(MenuItem *menu) {
             if (option == 1) {
                 return menu[option - 1].function;
             } else if (option == 2) {
-
+                return menu[option - 1].function;
             } else if (option == 3) {
-
+                return menu[option - 1].function;
             } else if (option == 4) {
-
+                return menu[option - 1].function;
             } else if (option == 5) {
-
+                return menu[option - 1].function;
             } else if (option == 6) {
-
+                return menu[option - 1].function;
             } else if (option == 7) {
-
+                return menu[option - 1].function;
             } else if (option == 8) {
-
+                return menu[option - 1].function;
             } else if (option == 9) {
                 return menu[option - 1].function;
             } else {

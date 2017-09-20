@@ -60,12 +60,12 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
     system->stockFileName = fileName;
 
     /* while the file has next line */
-    while (fgets(data, 512, stockFile) != NULL) {
+    while (fgets(data, sizeof(data), stockFile) != NULL) {
 
         Node *node = malloc(sizeof(Node));
 
         Stock *stock = malloc(sizeof(Stock));
-        assignValueToNode(data, stock);
+        assignValueToStock(data, stock);
         addToList(system->itemList, node);
     }
 
@@ -110,12 +110,10 @@ Boolean saveCoins(VmSystem *system) {
  * This is the data loaded into the linked list in the requirement 2.
  **/
 void displayItems(VmSystem *system) {
-    Node *cursor = malloc(sizeof(cursor));
-
-
     printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
+    printf("---------------------------------------------------\n");
 
-    printStockList(cursor);
+    printStockList(system->itemList->head);
 
     /* <ID>|<NAME>|<DESCRIPTION>|<DOLLARS>.<CENTS>|<QUANTITY> */
 }
@@ -185,7 +183,7 @@ void abortProgram(VmSystem *system) {
     exit(0);
 }
 
-void assignValueToNode(char *data, Stock *stock) {
+void assignValueToStock(char *data, Stock *stock) {
     char *id;
     char *name;
     char *desc;
@@ -208,9 +206,9 @@ void assignValueToNode(char *data, Stock *stock) {
     dollarInString = strtok(priceInString, ".");
     centInString = strtok(NULL, ".");
 
-    dollars = (unsigned) strtol(dollarInString, NULL, 10);
-    cents = (unsigned) strtol(centInString, NULL, 10);
-    onHand = (unsigned) strtol(onHandInString, NULL, 10);
+    dollars = strtol(dollarInString, NULL, 10);
+    cents = strtol(centInString, NULL, 10);
+    onHand = strtol(onHandInString, NULL, 10);
 
     strcpy(stock->id, id);
     strcpy(stock->name, name);
