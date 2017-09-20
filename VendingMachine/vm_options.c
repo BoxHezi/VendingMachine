@@ -46,7 +46,7 @@ Boolean loadData(
  * Loads the stock file data into the system.
  **/
 Boolean loadStock(VmSystem *system, const char *fileName) {
-    char data[512];
+    char data[512] = "";
 
     /* load stock file */
     FILE *stockFile;
@@ -60,12 +60,13 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
     system->stockFileName = fileName;
 
     /* while the file has next line */
-    while (fgets(data, 100, stockFile) != NULL) {
+    while (fgets(data, 512, stockFile) != NULL) {
+
         Node *node = malloc(sizeof(Node));
-        List *stockList = malloc(sizeof(List));
+
         Stock *stock = malloc(sizeof(Stock));
         assignValueToNode(data, stock);
-        /* addToList(stockList, node); */
+        addToList(system->itemList, node);
     }
 
     fclose(stockFile);
@@ -184,24 +185,28 @@ void abortProgram(VmSystem *system) {
     exit(0);
 }
 
-void assignValueToNode(char *line, Stock *stock) {
+void assignValueToNode(char *data, Stock *stock) {
     char *id;
     char *name;
     char *desc;
+    char *priceInString;
     char *dollarInString;
     char *centInString;
+
     char *onHandInString;
 
     unsigned dollars;
     unsigned cents;
     unsigned onHand;
 
-    id = strtok(line, STOCK_DELIM);
+    id = strtok(data, STOCK_DELIM);
     name = strtok(NULL, STOCK_DELIM);
     desc = strtok(NULL, STOCK_DELIM);
-    dollarInString = strtok(NULL, ".");
-    centInString = strtok(NULL, STOCK_DELIM);
+    priceInString = strtok(NULL, STOCK_DELIM);
     onHandInString = strtok(NULL, STOCK_DELIM);
+
+    dollarInString = strtok(priceInString, ".");
+    centInString = strtok(NULL, ".");
 
     dollars = (unsigned) strtol(dollarInString, NULL, 10);
     cents = (unsigned) strtol(centInString, NULL, 10);
