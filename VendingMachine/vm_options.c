@@ -144,6 +144,14 @@ void displayItems(VmSystem *system) {
         current = current->next;
     }
 
+    current = system->itemList->head;
+    for (j = 0; j < system->itemList->size; j++) {
+        tempSize = (unsigned) strlen(current->data->desc);
+        if (descSize < tempSize) {
+            descSize = tempSize;
+        }
+        current = current->next;
+    }
 
     printf("ID");
     printSize = (unsigned) strlen("ID");
@@ -156,6 +164,14 @@ void displayItems(VmSystem *system) {
     printf("Name");
     printSize = (unsigned) strlen("Name");
     while (printSize < nameSize) {
+        printf(" ");
+        printSize++;
+    }
+    printf("|");
+
+    printf("Description");
+    printSize = (unsigned) strlen("Description");
+    while (printSize < descSize) {
         printf(" ");
         printSize++;
     }
