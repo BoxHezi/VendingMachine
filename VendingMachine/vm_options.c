@@ -111,8 +111,65 @@ Boolean saveCoins(VmSystem *system) {
  * This is the data loaded into the linked list in the requirement 2.
  **/
 void displayItems(VmSystem *system) {
+    unsigned idSize = 0;
+    unsigned nameSize = 0;
+    unsigned descSize = 0;
+    unsigned priceSize = 0;
+    unsigned dollarSize = 0;
+    unsigned centSize = 0;
+    unsigned onHandSize = 0;
+
+    unsigned tempSize = 0;
+
+    unsigned printSize = 0;
+    int i, j;
+
+    Node *current = system->itemList->head;
+
+    /* calculate max id size */
+    for (j = 0; j < system->itemList->size; j++) {
+        tempSize = (unsigned) strlen(current->data->id);
+        if (idSize < tempSize) {
+            idSize = tempSize;
+        }
+        current = current->next;
+    }
+
+    current = system->itemList->head;
+    for (j = 0; j < system->itemList->size; j++) {
+        tempSize = (unsigned) strlen(current->data->name);
+        if (nameSize < tempSize) {
+            nameSize = tempSize;
+        }
+        current = current->next;
+    }
+
+
+    printf("ID");
+    printSize = (unsigned) strlen("ID");
+    while (printSize < idSize) {
+        printf(" ");
+        printSize++;
+    }
+    printf("|");
+
+    printf("Name");
+    printSize = (unsigned) strlen("Name");
+    while (printSize < nameSize) {
+        printf(" ");
+        printSize++;
+    }
+    printf("|");
+
+    for (i = 0; i < idSize; i++) {
+        printf("-");
+    }
+    printf("\n");
+
+    /*
     printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
-    printf("---------------------------------------------------\n");    
+    printf("---------------------------------------------------\n");
+    */
 
     printStockList(system->itemList->head);
 

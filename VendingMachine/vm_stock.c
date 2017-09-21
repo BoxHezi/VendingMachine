@@ -36,16 +36,17 @@ Node *createNode(Stock *stock, Node *node) {
 void addToList(List *list, Node *node) {
     node->next = list->head;
     list->head = node;
+    list->size++;
 }
 
 void assignValueToStock(char *data, Stock *stock) {
+    /* get stock data from each line */
     char *id;
     char *name;
     char *desc;
     char *priceInString;
     char *dollarInString;
     char *centInString;
-
     char *onHandInString;
 
     unsigned dollars;
@@ -58,11 +59,11 @@ void assignValueToStock(char *data, Stock *stock) {
     priceInString = strtok(NULL, STOCK_DELIM);
     onHandInString = strtok(NULL, STOCK_DELIM);
 
-    /* get dollars and cents from price */
+    /* get dollars and cents from price as a string */
     dollarInString = strtok(priceInString, ".");
     centInString = strtok(NULL, ".");
 
-    /* cast dollars, cents and onHand to unsigned */
+    /* change and cast dollars, cents and onHand to unsigned */
     dollars = (unsigned) strtol(dollarInString, NULL, 10);
     cents = (unsigned) strtol(centInString, NULL, 10);
     onHand = (unsigned) strtol(onHandInString, NULL, 10);
@@ -85,7 +86,7 @@ void printStockList(Node *start) {
 
     while (start != NULL) {
 
-        printf("%s|%s|%s|%d.%d|%d", start->data->id, start->data->name, start->data->desc,
+        printf("%s|%s|%s|%d.%d|%d\n", start->data->id, start->data->name, start->data->desc,
                start->data->price.dollars, start->data->price.cents, start->data->onHand);
 
         start = start->next;
