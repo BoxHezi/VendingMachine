@@ -119,12 +119,22 @@ void displayItems(VmSystem *system) {
     unsigned centSize = 0;
     unsigned onHandSize = 0;
 
+    /* tempAmount is used to calculate length of int
+     * (dollarSize, centSize and onHandSize)
+     */
+    unsigned tempAmount = 0;
+
     unsigned tempSize = 0;
 
     unsigned printSize = 0;
+    unsigned totalPrintSize = 0;
     int i, j;
 
     Node *current = system->itemList->head;
+
+    /*
+     * calculate size need for each section dynamically
+     */
 
     /* calculate max id size */
     for (j = 0; j < system->itemList->size; j++) {
@@ -153,8 +163,68 @@ void displayItems(VmSystem *system) {
         current = current->next;
     }
 
+    current = system->itemList->head;
+    for (j = 0; j < system->itemList->size; j++) {
+        tempSize = 0;
+        tempAmount = current->data->price.dollars;
+        while ((double) tempAmount / 10 > 0) {
+            if ((double) tempAmount / 10 < 1) {
+                tempSize++;
+                break;
+            }
+            tempAmount /= 10;
+            tempSize++;
+        }
+        if (dollarSize < tempSize) {
+            dollarSize = tempSize;
+        }
+        current = current->next;
+    }
+    priceSize = dollarSize;
+
+    current = system->itemList->head;
+    for (j = 0; j < system->itemList->size; j++) {
+        tempSize = 0;
+        tempAmount = current->data->price.cents;
+        while ((double) tempAmount / 10 > 0) {
+            if ((double) tempAmount / 10 < 1) {
+                tempSize++;
+                break;
+            }
+            tempAmount /= 10;
+            tempSize++;
+        }
+        if (centSize < tempSize) {
+            centSize = tempSize;
+        }
+        current = current->next;
+    }
+    /* +1 for the dot */
+    priceSize += centSize + 1;
+
+    current = system->itemList->head;
+    for (j = 0; j < system->itemList->size; j++) {
+        tempSize = 0;
+        tempAmount = current->data->onHand;
+        while ((double) tempAmount / 10 > 10) {
+            if ((double) tempAmount / 10 < 1) {
+                tempSize++;
+                break;
+            }
+            tempAmount /= 10;
+            tempSize++;
+        }
+        if (onHandSize < tempSize) {
+            onHandSize = tempSize;
+        }
+        current = current->next;
+    }
+
     printf("ID");
     printSize = (unsigned) strlen("ID");
+    if (idSize < printSize) {
+        idSize = printSize;
+    }
     while (printSize < idSize) {
         printf(" ");
         printSize++;
@@ -163,6 +233,9 @@ void displayItems(VmSystem *system) {
 
     printf("Name");
     printSize = (unsigned) strlen("Name");
+    if (nameSize < printSize) {
+        nameSize = printSize;
+    }
     while (printSize < nameSize) {
         printf(" ");
         printSize++;
@@ -171,21 +244,43 @@ void displayItems(VmSystem *system) {
 
     printf("Description");
     printSize = (unsigned) strlen("Description");
+    if (descSize < printSize) {
+        descSize = printSize;
+    }
     while (printSize < descSize) {
         printf(" ");
         printSize++;
     }
     printf("|");
 
-    for (i = 0; i < idSize; i++) {
+    printf("Price");
+    printSize = (unsigned) strlen("Price");
+    if (priceSize < printSize) {
+        priceSize = printSize;
+    }
+    while (printSize < priceSize) {
+        printf(" ");
+        printSize++;
+    }
+    printf("|");
+
+    printf("On Hand");
+    printSize = (unsigned) strlen("On Hand");
+    if (onHandSize < printSize) {
+        onHandSize = printSize;
+    }
+    while (printSize < onHandSize) {
+        printf(" ");
+        printSize++;
+    }
+
+    /* +4 for 4 vertical bars in the menu */
+    totalPrintSize = idSize + nameSize + descSize + priceSize + onHandSize + 4;
+    printf("\n");
+    for (i = 0; i < totalPrintSize; i++) {
         printf("-");
     }
     printf("\n");
-
-    /*
-    printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
-    printf("---------------------------------------------------\n");
-    */
 
     printStockList(system->itemList->head);
 
