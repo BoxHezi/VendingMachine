@@ -25,17 +25,10 @@ List *initList() {
 
 /* create new node */
 Node *createNode(Stock *stock, Node *node) {
-    node = malloc(sizeof(Node));
-    if (node == NULL) {
-        printf("Error, can't create a new node!\n");
-        exit(EXIT_FAILURE);
-    }
+
 
     node->data = stock;
-    if (node == NULL) {
-        node->next=NULL;
-    }
-    node->next = node;
+    node->next = NULL;
 
     return node;
 }
@@ -65,7 +58,7 @@ void assignValueToStock(char *data, Stock *stock) {
     priceInString = strtok(NULL, STOCK_DELIM);
     onHandInString = strtok(NULL, STOCK_DELIM);
 
-    /* get dollars and cents */
+    /* get dollars and cents from price */
     dollarInString = strtok(priceInString, ".");
     centInString = strtok(NULL, ".");
 
@@ -85,20 +78,17 @@ void assignValueToStock(char *data, Stock *stock) {
 
 /* print stock list */
 void printStockList(Node *start) {
-    Node *currentItem;
-    start = malloc(sizeof(Node));
-    currentItem = start;
 
-    if (currentItem == NULL) {
-        currentItem = currentItem->next;
+    if (start == NULL) {
+        start = start->next;
     }
 
-    while (currentItem != NULL) {
+    while (start != NULL) {
 
-        printf("%s|%s|%s|%d.%d|%d", currentItem->data->id, currentItem->data->name, currentItem->data->desc,
-               currentItem->data->price.dollars, currentItem->data->price.cents, currentItem->data->onHand);
+        printf("%s|%s|%s|%d.%d|%d", start->data->id, start->data->name, start->data->desc,
+               start->data->price.dollars, start->data->price.cents, start->data->onHand);
 
-        currentItem = currentItem->next;
+        start = start->next;
     }
     printf("\n");
 }

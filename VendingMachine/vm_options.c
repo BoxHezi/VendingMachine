@@ -112,7 +112,7 @@ Boolean saveCoins(VmSystem *system) {
  **/
 void displayItems(VmSystem *system) {
     printf("Item ID|Item Name|Item Desc|Price|Number On Hand\n");
-    printf("---------------------------------------------------\n");
+    printf("---------------------------------------------------\n");    
 
     printStockList(system->itemList->head);
 
