@@ -113,7 +113,6 @@ Boolean saveCoins(VmSystem *system) {
 void displayItems(VmSystem *system) {
     unsigned idSize = 0;
     unsigned nameSize = 0;
-    unsigned descSize = 0;
     unsigned priceSize = 0;
     unsigned dollarSize = 0;
     unsigned centSize = 0;
@@ -156,15 +155,6 @@ void displayItems(VmSystem *system) {
 
     current = system->itemList->head;
     for (j = 0; j < system->itemList->size; j++) {
-        tempSize = (unsigned) strlen(current->data->desc);
-        if (descSize < tempSize) {
-            descSize = tempSize;
-        }
-        current = current->next;
-    }
-
-    current = system->itemList->head;
-    for (j = 0; j < system->itemList->size; j++) {
         tempSize = 0;
         tempAmount = current->data->price.dollars;
         while ((double) tempAmount / 10 > 0) {
@@ -199,8 +189,8 @@ void displayItems(VmSystem *system) {
         }
         current = current->next;
     }
-    /* +1 for the dot */
-    priceSize += centSize + 1;
+    /* +1 for the dot and $ sign */
+    priceSize += centSize + 2;
 
     current = system->itemList->head;
     for (j = 0; j < system->itemList->size; j++) {
@@ -229,7 +219,7 @@ void displayItems(VmSystem *system) {
         printf(" ");
         printSize++;
     }
-    printf("|");
+    printf(" | ");
 
     printf("Name");
     printSize = (unsigned) strlen("Name");
@@ -240,18 +230,18 @@ void displayItems(VmSystem *system) {
         printf(" ");
         printSize++;
     }
-    printf("|");
+    printf(" | ");
 
-    printf("Description");
-    printSize = (unsigned) strlen("Description");
-    if (descSize < printSize) {
-        descSize = printSize;
+    printf("Available");
+    printSize = (unsigned) strlen("Available");
+    if (onHandSize < printSize) {
+        onHandSize = printSize;
     }
-    while (printSize < descSize) {
+    while (printSize < onHandSize) {
         printf(" ");
         printSize++;
     }
-    printf("|");
+    printf(" | ");
 
     printf("Price");
     printSize = (unsigned) strlen("Price");
@@ -262,27 +252,57 @@ void displayItems(VmSystem *system) {
         printf(" ");
         printSize++;
     }
-    printf("|");
 
-    printf("On Hand");
-    printSize = (unsigned) strlen("On Hand");
-    if (onHandSize < printSize) {
-        onHandSize = printSize;
-    }
-    while (printSize < onHandSize) {
-        printf(" ");
-        printSize++;
-    }
 
-    /* +4 for 4 vertical bars in the menu */
-    totalPrintSize = idSize + nameSize + descSize + priceSize + onHandSize + 4;
+
+    /* +9 for 4 vertical bars in the menu and spaces after and before | */
+    totalPrintSize = idSize + nameSize + priceSize + onHandSize + 9;
     printf("\n");
     for (i = 0; i < totalPrintSize; i++) {
         printf("-");
     }
     printf("\n");
 
-    printStockList(system->itemList->head);
+    current = system->itemList->head;
+    while (current != NULL) {
+
+        printf("%s", current->data->id);
+        printSize = (unsigned) strlen(current->data->id);
+        /* print vertical alignment */
+        while (printSize < idSize) {
+            printf(" ");
+            printSize++;
+        }
+        printf(" | ");
+
+        printf("%s", current->data->name);
+        printSize = (unsigned) strlen(current->data->name);
+        while (printSize < nameSize) {
+            printf(" ");
+            printSize++;
+        }
+        printf(" | ");
+
+        printf("%d", current->data->onHand);
+        printSize = 2;
+        while (printSize < onHandSize) {
+            printf(" ");
+            printSize++;
+        }
+        printf(" | ");
+
+        printf("$%d.%02d", current->data->price.dollars, current->data->price.cents);
+        printSize = 2;
+        while (printSize < priceSize) {
+            printf(" ");
+            printSize++;
+        }
+        printf("\n");
+
+
+        current = current->next;
+
+    }
 
     /* <ID>|<NAME>|<DESCRIPTION>|<DOLLARS>.<CENTS>|<QUANTITY> */
 }

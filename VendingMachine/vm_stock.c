@@ -76,20 +76,3 @@ void assignValueToStock(char *data, Stock *stock) {
     stock->onHand = onHand;
     printf("Stock added!\n");
 }
-
-/* print stock list */
-void printStockList(Node *start) {
-
-    if (start == NULL) {
-        start = start->next;
-    }
-
-    while (start != NULL) {
-
-        printf("%s|%s|%s|%d.%d|%d\n", start->data->id, start->data->name, start->data->desc,
-               start->data->price.dollars, start->data->price.cents, start->data->onHand);
-
-        start = start->next;
-    }
-    printf("\n");
-}

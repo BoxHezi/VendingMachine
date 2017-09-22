@@ -11,8 +11,6 @@
 
 #define STOCK_DELIM "|"
 
-void printStockList(Node *start);
-
 List *initList();
 
 void addToList(List *list, Node *node);
