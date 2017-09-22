@@ -46,6 +46,7 @@ void assignValueToStock(char *data, Stock *stock) {
     char *centInString;
     char *onHandInString;
 
+    /* store value that convert string to int */
     unsigned dollars;
     unsigned cents;
     unsigned onHand;
