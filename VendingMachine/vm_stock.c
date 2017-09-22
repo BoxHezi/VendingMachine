@@ -25,11 +25,8 @@ List *initList() {
 
 /* create new node */
 Node *createNode(Stock *stock, Node *node) {
-
-
     node->data = stock;
     node->next = NULL;
-
     return node;
 }
 
@@ -74,10 +71,15 @@ void assignValueToStock(char *data, Stock *stock) {
     stock->price.dollars = dollars;
     stock->price.cents = cents;
     stock->onHand = onHand;
-    printf("Stock added!\n");
 }
 
 void sortList(List *list) {
-    char *id;
-    char *tempId;
+    Node *current;
+    Node *next;
+    Node *previous;
+
+    current = list->head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
 }
