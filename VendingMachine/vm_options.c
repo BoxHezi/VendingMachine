@@ -334,8 +334,6 @@ void displayItems(VmSystem *system) {
         current = current->next;
 
     }
-
-    /* <ID>|<NAME>|<DESCRIPTION>|<DOLLARS>.<CENTS>|<QUANTITY> */
 }
 
 /**

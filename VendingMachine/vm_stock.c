@@ -76,3 +76,8 @@ void assignValueToStock(char *data, Stock *stock) {
     stock->onHand = onHand;
     printf("Stock added!\n");
 }
+
+void sortList(List *list) {
+    char *id;
+    char *tempId;
+}
