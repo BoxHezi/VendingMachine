@@ -284,7 +284,17 @@ void displayItems(VmSystem *system) {
         printf(" | ");
 
         printf("%d", current->data->onHand);
-        printSize = 2;
+        printSize = 0;
+        tempAmount = current->data->onHand;
+        while ((double) tempAmount / 10 > 0) {
+            if ((double) tempAmount / 10 < 1) {
+                printSize++;
+                break;
+            }
+            tempAmount /= 10;
+            printSize++;
+        }
+
         while (printSize < onHandSize) {
             printf(" ");
             printSize++;
@@ -292,7 +302,28 @@ void displayItems(VmSystem *system) {
         printf(" | ");
 
         printf("$%d.%02d", current->data->price.dollars, current->data->price.cents);
-        printSize = 2;
+        printSize = 0;
+        tempAmount = current->data->price.dollars;
+        while ((double) tempAmount / 10 > 0) {
+            if ((double) tempAmount / 10 < 1) {
+                printSize++;
+                break;
+            }
+            tempAmount /= 10;
+            printSize++;
+        }
+        priceSize = printSize;
+        tempAmount = current->data->price.cents;
+        while ((double) tempAmount / 10 > 0) {
+            if ((double) tempAmount / 10 < 1) {
+                printSize++;
+                break;
+            }
+            tempAmount /= 10;
+            printSize++;
+        }
+        centSize = printSize;
+        printSize = priceSize + centSize + 2;
         while (printSize < priceSize) {
             printf(" ");
             printSize++;
