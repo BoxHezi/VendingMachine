@@ -343,9 +343,9 @@ void displayItems(VmSystem *system) {
  **/
 void purchaseItem(VmSystem *system) {
     Boolean itemFound = FALSE;
-    char priceInput[10 + EXTRA_SPACES];
+    /* char priceInput[10 + EXTRA_SPACES]; */
     char itemIDInput[5 + EXTRA_SPACES];
-    Node *currentItem = system->itemList->head;
+    Node *currentItem;
 
     printf("Purchase Item\n");
     printf("----------------\n");
@@ -364,6 +364,12 @@ void purchaseItem(VmSystem *system) {
             while (currentItem != NULL) {
                 if (strcmp(itemIDInput, currentItem->data->id) == 0) {
                     printf("Item Found\n");
+                    printf("You have selected \"%s\t%s\". This wil be cost you $%d.%02d.\n", currentItem->data->name,
+                           currentItem->data->desc, currentItem->data->price.dollars, currentItem->data->price.cents);
+                    printf("Please hand over the money - type in the value of each note/coin in cents.\n");
+
+                    makePayment(system);
+
                     itemFound = TRUE;
                 }
 
@@ -376,35 +382,82 @@ void purchaseItem(VmSystem *system) {
             }
         }
     }
+}
 
-    /* while (TRUE) {
-        printf("Purchase Item\n");
-        printf("-----------------\n");
+void makePayment(VmSystem *system) {
+    char priceInput[4 + EXTRA_SPACES];
+    unsigned price;
+    Boolean priceValid = FALSE;
 
-        printf("Please enter the id of the item you wish to purchase: ");
-        fgets(itemIDInput, sizeof(itemIDInput), stdin);
+    while (!priceValid) {
+        printf("If you don't want purchase, please hit enter to cancel: ");
+        fgets(priceInput, sizeof(priceInput), stdin);
 
-        if (itemIDInput[strlen(itemIDInput) - 1] != '\n') {
-            printf("Invalid option, try again!\n");
-            readRestOfLine();
-            continue;
-        } else {
-            while (currentItem != NULL) {
-
-                if (strncmp(currentItem->data->id, itemIDInput, 5) == 0) {
-                    printf("Item Found\n");
-                    break;
-                } else {
-                    printf("No Item Found! Try again.\n");
-                    readRestOfLine();
-                }
-
-                currentItem = currentItem->next;
-            }
+        if (strcmp("\n\0", priceInput) == 0) {
+            printf("Returning to menu...\n");
+            return;
         }
 
+        if (priceInput[strlen(priceInput) - 1] != '\n') {
+            printf("Invalid, try again\n");
+            readRestOfLine();
+        } else {
+            priceValid = TRUE;
+            priceInput[strlen(priceInput) - 1] = '\0';
+            price = (unsigned) strtol(priceInput, NULL, 10);
 
-    } */
+            checkIncomeValidation(priceInput);
+        }
+
+    }
+
+}
+
+Boolean checkIncomeValidation(char *priceInString) {
+    Boolean validIncome;
+    unsigned price;
+
+    price = (unsigned) strtol(priceInString, NULL, 10);
+    switch (price) {
+        case 5:
+            price = FIVE_CENTS;
+            validIncome = TRUE;
+            break;
+        case 10:
+            price = TEN_CENTS;
+            validIncome = TRUE;
+            break;
+        case 20:
+            price = TWENTY_CENTS;
+            validIncome = TRUE;
+            break;
+        case 50:
+            price = FIFTY_CENTS;
+            validIncome = TRUE;
+            break;
+        case 100:
+            price = ONE_DOLLAR;
+            validIncome = TRUE;
+            break;
+        case 200:
+            price = TWO_DOLLARS;
+            validIncome = TRUE;
+            break;
+        case 500:
+            price = FIVE_DOLLARS;
+            validIncome = TRUE;
+            break;
+        case 1000:
+            price = TEN_DOLLARS;
+            validIncome = TRUE;
+            break;
+        default:
+            validIncome = FALSE;
+            break;
+    }
+
+
+    return validIncome;
 }
 
 /**

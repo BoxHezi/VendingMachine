@@ -36,4 +36,6 @@ void resetCoins(VmSystem *system);
 
 void abortProgram(VmSystem *system);
 
+void makePayment(VmSystem *system);
+
 #endif
