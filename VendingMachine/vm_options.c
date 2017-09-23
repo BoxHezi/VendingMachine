@@ -341,7 +341,41 @@ void displayItems(VmSystem *system) {
  * This option allows the user to purchase an item.
  * This function implements requirement 5 of the assignment specification.
  **/
-void purchaseItem(VmSystem *system) {}
+void purchaseItem(VmSystem *system) {
+    char priceInput[10 + EXTRA_SPACES];
+    char itemIDInput[5 + EXTRA_SPACES];
+    Node *currentItem = system->itemList->head;
+    int i = 0;
+
+    while (TRUE) {
+        printf("Purchase Item\n");
+        printf("-----------------\n");
+
+        printf("Please enter the id of the item you wish to purchase: ");
+        fgets(itemIDInput, sizeof(itemIDInput), stdin);
+
+        if (itemIDInput[strlen(itemIDInput) - 1] != '\n') {
+            printf("Invalid option, try again!\n");
+            readRestOfLine();
+            continue;
+        } else {
+            while (currentItem != NULL) {
+
+                if (strncmp(currentItem->data->id, itemIDInput, 5) == 0) {
+                    printf("Item Found\n");
+                    break;
+                } else {
+                    printf("No Item Found! Try again.\n");
+                    readRestOfLine();
+                }
+
+                currentItem = currentItem->next;
+            }
+        }
+
+
+    }
+}
 
 /**
  * You must save all data to the data files that were provided on the command
