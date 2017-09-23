@@ -16,6 +16,29 @@ void initCoins(Coin *cashRegister) {
     Denomination denomination = FIVE_CENTS;
     for (i = 0; i < NUM_DENOMS; i++) {
         cashRegister[i].count = DEFAULT_COIN_COUNT;
-        cashRegister[i].denom = denomination++;
+        cashRegister[i].denom = denomination;
+        denomination++;
     }
+}
+
+void addCoin(char *coinData, VmSystem *system) {
+    static int i = 0;
+    char *coinInString;
+    char *coinCountInString;
+
+    unsigned coin;
+    unsigned coinCount;
+
+    coinInString = strtok(coinData, COIN_DELIM);
+    coinCountInString = strtok(NULL, COIN_DELIM);
+
+    coin = (unsigned) strtol(coinInString, NULL, 10);
+    coinCount = (unsigned) strtol(coinCountInString, NULL, 10);
+
+    while (i < NUM_DENOMS) {
+        system->cashRegister[i].denom = coin;
+        system->cashRegister[i].count = coinCount;
+    }
+    i++;
+
 }

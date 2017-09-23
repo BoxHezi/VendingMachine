@@ -78,6 +78,7 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
  * Loads the coin file data into the system.
  **/
 Boolean loadCoins(VmSystem *system, const char *fileName) {
+    char coinData[7];
     FILE *coinsFile;
     coinsFile = fopen(fileName, "r");
 
@@ -87,6 +88,10 @@ Boolean loadCoins(VmSystem *system, const char *fileName) {
     }
 
     system->coinFileName = fileName;
+
+    while (fgets(coinData, sizeof(coinData), coinsFile) != NULL) {
+
+    }
 
     fclose(coinsFile);
     return TRUE;
@@ -402,60 +407,65 @@ void makePayment(VmSystem *system) {
             printf("Invalid, try again\n");
             readRestOfLine();
         } else {
-            priceValid = TRUE;
             priceInput[strlen(priceInput) - 1] = '\0';
             price = (unsigned) strtol(priceInput, NULL, 10);
 
-            checkIncomeValidation(priceInput);
+            if (!checkIncomeValidation(system, priceInput)) {
+                printf("Error: $%d.%02d is not a valid denomination of money\n", price / 100, price % 100);
+            } else {
+                printf("Hello World\n");
+                priceValid = TRUE;
+            }
         }
 
     }
 
 }
 
-Boolean checkIncomeValidation(char *priceInString) {
-    Boolean validIncome;
-    unsigned price;
+Boolean checkIncomeValidation(VmSystem *system, char *priceInString) {
+    Boolean validIncome = FALSE;
+    unsigned price = 0;
+    int i;
 
     price = (unsigned) strtol(priceInString, NULL, 10);
-    switch (price) {
+    /* switch (price) {
         case 5:
             price = FIVE_CENTS;
-            validIncome = TRUE;
             break;
         case 10:
             price = TEN_CENTS;
-            validIncome = TRUE;
             break;
         case 20:
             price = TWENTY_CENTS;
-            validIncome = TRUE;
             break;
         case 50:
             price = FIFTY_CENTS;
-            validIncome = TRUE;
             break;
         case 100:
             price = ONE_DOLLAR;
-            validIncome = TRUE;
             break;
         case 200:
             price = TWO_DOLLARS;
-            validIncome = TRUE;
             break;
         case 500:
             price = FIVE_DOLLARS;
-            validIncome = TRUE;
             break;
         case 1000:
             price = TEN_DOLLARS;
-            validIncome = TRUE;
             break;
         default:
             validIncome = FALSE;
             break;
-    }
+    } */
 
+    for (i = 0; i < system->cashRegister->count; i++) {
+        if (price == system->cashRegister[i].denom) {
+            printf("Hello World\n");
+            validIncome = TRUE;
+            break;
+        }
+        i++;
+    }
 
     return validIncome;
 }

@@ -38,4 +38,6 @@ void abortProgram(VmSystem *system);
 
 void makePayment(VmSystem *system);
 
+Boolean checkIncomeValidation(VmSystem *system, char *priceInString);
+
 #endif
