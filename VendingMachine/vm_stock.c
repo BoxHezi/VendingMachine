@@ -31,8 +31,26 @@ Node *createNode(Stock *stock, Node *node) {
 }
 
 void addToList(List *list, Node *node) {
-    node->next = list->head;
-    list->head = node;
+    Node *tempNode;
+
+    /* set node next to NULL avoid invalid pointer be added */
+    node->next = NULL;
+
+    /* check for the first time addition */
+    if (list->head == NULL) {
+        list->head = node;
+    } else {
+        tempNode = list->head;
+        while (TRUE) {
+            if (tempNode->next == NULL) {
+                tempNode->next = node;
+                break;
+            }
+            tempNode = tempNode->next;
+
+        }
+    }
+
     list->size++;
 }
 
@@ -72,15 +90,4 @@ void assignValueToStock(char *data, Stock *stock) {
     stock->price.dollars = dollars;
     stock->price.cents = cents;
     stock->onHand = onHand;
-}
-
-void sortList(List *list) {
-    Node *current;
-    Node *next;
-    Node *previous;
-
-    current = list->head;
-    while (current->next != NULL) {
-        current = current->next;
-    }
 }

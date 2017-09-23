@@ -264,7 +264,6 @@ void displayItems(VmSystem *system) {
     printf("\n");
 
 
-
     current = system->itemList->head;
     while (current != NULL) {
 
