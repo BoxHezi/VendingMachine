@@ -342,12 +342,42 @@ void displayItems(VmSystem *system) {
  * This function implements requirement 5 of the assignment specification.
  **/
 void purchaseItem(VmSystem *system) {
+    Boolean itemFound = FALSE;
     char priceInput[10 + EXTRA_SPACES];
     char itemIDInput[5 + EXTRA_SPACES];
     Node *currentItem = system->itemList->head;
-    int i = 0;
 
-    while (TRUE) {
+    printf("Purchase Item\n");
+    printf("----------------\n");
+
+    while (!itemFound) {
+        /* reset the currentItem point to first item in the list */
+        currentItem = system->itemList->head;
+
+        printf("Please enter the id of the item you want to purchase: ");
+        fgets(itemIDInput, sizeof(itemIDInput), stdin);
+        if (itemIDInput[strlen(itemIDInput) - 1] != '\n') {
+            printf("Invalid input, try again\n");
+            readRestOfLine();
+        } else {
+            itemIDInput[strlen(itemIDInput) - 1] = '\0';
+            while (currentItem != NULL) {
+                if (strcmp(itemIDInput, currentItem->data->id) == 0) {
+                    printf("Item Found\n");
+                    itemFound = TRUE;
+                }
+
+                currentItem = currentItem->next;
+            }
+            if (!itemFound) {
+                printf("Item Not Found\n");
+            } else {
+                break;
+            }
+        }
+    }
+
+    /* while (TRUE) {
         printf("Purchase Item\n");
         printf("-----------------\n");
 
@@ -374,7 +404,7 @@ void purchaseItem(VmSystem *system) {
         }
 
 
-    }
+    } */
 }
 
 /**
