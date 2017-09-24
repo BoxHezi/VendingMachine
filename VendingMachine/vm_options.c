@@ -78,7 +78,8 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
  * Loads the coin file data into the system.
  **/
 Boolean loadCoins(VmSystem *system, const char *fileName) {
-    char coinData[7];
+
+
     FILE *coinsFile;
     coinsFile = fopen(fileName, "r");
 
@@ -88,10 +89,6 @@ Boolean loadCoins(VmSystem *system, const char *fileName) {
     }
 
     system->coinFileName = fileName;
-
-    while (fgets(coinData, sizeof(coinData), coinsFile) != NULL) {
-
-    }
 
     fclose(coinsFile);
     return TRUE;
@@ -373,7 +370,7 @@ void purchaseItem(VmSystem *system) {
                            currentItem->data->desc, currentItem->data->price.dollars, currentItem->data->price.cents);
                     printf("Please hand over the money - type in the value of each note/coin in cents.\n");
 
-                    makePayment(system);
+                    makePayment(system, currentItem);
 
                     itemFound = TRUE;
                 }
@@ -389,9 +386,11 @@ void purchaseItem(VmSystem *system) {
     }
 }
 
-void makePayment(VmSystem *system) {
+void makePayment(VmSystem *system, Node *node) {
     char priceInput[4 + EXTRA_SPACES];
-    unsigned price;
+    unsigned price = 0;
+    unsigned dollars = 0;
+    unsigned cents = 0;
     Boolean priceValid = FALSE;
 
     while (!priceValid) {
@@ -410,25 +409,30 @@ void makePayment(VmSystem *system) {
             priceInput[strlen(priceInput) - 1] = '\0';
             price = (unsigned) strtol(priceInput, NULL, 10);
 
+            dollars = price / 100;
+            cents = price % 100;
+
             if (!checkIncomeValidation(system, priceInput)) {
-                printf("Error: $%d.%02d is not a valid denomination of money\n", price / 100, price % 100);
+                printf("Error: $%d.%02d is not a valid denomination of money\n", dollars, cents);
+                continue;
             } else {
-                printf("Hello World\n");
                 priceValid = TRUE;
             }
         }
 
+        checkAmount(system, node, dollars, cents);
     }
 
 }
 
+/* function to check correct denomination of coins input */
 Boolean checkIncomeValidation(VmSystem *system, char *priceInString) {
     Boolean validIncome = FALSE;
     unsigned price = 0;
     int i;
 
     price = (unsigned) strtol(priceInString, NULL, 10);
-    /* switch (price) {
+    switch (price) {
         case 5:
             price = FIVE_CENTS;
             break;
@@ -456,18 +460,82 @@ Boolean checkIncomeValidation(VmSystem *system, char *priceInString) {
         default:
             validIncome = FALSE;
             break;
-    } */
+    }
 
-    for (i = 0; i < system->cashRegister->count; i++) {
+    for (i = 0; i < NUM_DENOMS; i++) {
         if (price == system->cashRegister[i].denom) {
-            printf("Hello World\n");
             validIncome = TRUE;
             break;
         }
-        i++;
     }
 
     return validIncome;
+}
+
+Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, unsigned cents) {
+    Boolean reachAmount = FALSE;
+    unsigned price = 0;
+
+    unsigned dollarAmountDue = itemToPurchase->data->price.dollars;
+    unsigned centAmountDue = itemToPurchase->data->price.cents;
+
+    unsigned change = 0;
+    unsigned dollarChange = 0;
+    unsigned centChange = 0;
+
+    char priceInput[4 + EXTRA_SPACES];
+
+
+    /* check if user enter enough money to purchase item */
+    while (!reachAmount) {
+        if (dollars > dollarAmountDue) {
+            reachAmount = TRUE;
+        } else {
+            dollarAmountDue = dollarAmountDue - dollars;
+            if (cents < centAmountDue) {
+                centAmountDue = centAmountDue - cents;
+            }
+
+            printf("You still need to give us $%d.%02d: ", dollarAmountDue, centAmountDue);
+            fgets(priceInput, sizeof(priceInput), stdin);
+            if (priceInput[strlen(priceInput) - 1] != '\n') {
+                printf("Invalid, try again\n");
+                readRestOfLine();
+            } else {
+                priceInput[strlen(priceInput) - 1] = '\0';
+                price = (unsigned) strtol(priceInput, NULL, 10);
+                dollars = price / 100;
+                cents = price % 100;
+
+                if (!checkIncomeValidation(system, priceInput)) {
+                    printf("Error: $%d.%02d is not a valid denomination of money\n", dollars, cents);
+                    /* avoid decrease of dollarAmountDue if some invalid amount is input */
+                    dollarAmountDue = dollarAmountDue + dollars;
+                    centAmountDue = centAmountDue + cents;
+                    continue;
+                }
+
+                if (dollars > dollarAmountDue) {
+                    reachAmount = TRUE;
+                } else {
+                    if (cents < centAmountDue) {
+                        centAmountDue = centAmountDue - cents;
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    change = price - (dollarAmountDue * 100 + centAmountDue);
+    dollarChange = change / 100;
+    centChange = change % 100;
+
+    printf("Thank you, here is your %s, and your change of $%d.%02d\n", itemToPurchase->data->name,
+           dollarChange, centChange);
+
+    return TRUE;
 }
 
 /**

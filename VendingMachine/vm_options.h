@@ -36,8 +36,10 @@ void resetCoins(VmSystem *system);
 
 void abortProgram(VmSystem *system);
 
-void makePayment(VmSystem *system);
+void makePayment(VmSystem *system, Node *node);
 
 Boolean checkIncomeValidation(VmSystem *system, char *priceInString);
+
+Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, unsigned cents);
 
 #endif
