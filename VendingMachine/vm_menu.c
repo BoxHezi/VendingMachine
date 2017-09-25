@@ -1,8 +1,5 @@
 #include "vm_menu.h"
 
-#define STOCK_DATA "stock.dat"
-#define COIN_DATA "coins.dat"
-
 /**
  * vm_menu.c handles the initialisation and management of the menu array.
  **/
