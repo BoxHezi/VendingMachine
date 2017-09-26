@@ -345,7 +345,6 @@ void displayItems(VmSystem *system) {
  **/
 void purchaseItem(VmSystem *system) {
     Boolean itemFound = FALSE;
-    /* char priceInput[10 + EXTRA_SPACES]; */
     char itemIDInput[5 + EXTRA_SPACES];
     Node *currentItem;
 
@@ -476,8 +475,8 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
     Boolean reachAmount = FALSE;
     unsigned price = 0;
 
-    unsigned dollarAmountDue = itemToPurchase->data->price.dollars;
-    unsigned centAmountDue = itemToPurchase->data->price.cents;
+    int dollarAmountDue = itemToPurchase->data->price.dollars;
+    int centAmountDue = itemToPurchase->data->price.cents;
 
     unsigned change = 0;
     unsigned dollarChange = 0;
@@ -492,8 +491,11 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
             reachAmount = TRUE;
         } else {
             dollarAmountDue = dollarAmountDue - dollars;
-            if (cents < centAmountDue) {
-                centAmountDue = centAmountDue - cents;
+            centAmountDue = centAmountDue - cents;
+
+            if (centAmountDue < 0) {
+                centAmountDue = centAmountDue + 100;
+                dollarAmountDue--;
             }
 
             printf("You still need to give us $%d.%02d: ", dollarAmountDue, centAmountDue);
@@ -517,10 +519,6 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
 
                 if (dollars > dollarAmountDue) {
                     reachAmount = TRUE;
-                } else {
-                    if (cents < centAmountDue) {
-                        centAmountDue = centAmountDue - cents;
-                    }
                 }
 
             }
