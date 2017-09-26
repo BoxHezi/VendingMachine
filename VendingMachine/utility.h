@@ -9,8 +9,8 @@
 #include <assert.h>
 
 typedef enum boolean {
-    FALSE = 0,
-    TRUE
+   FALSE = 0,
+   TRUE
 } Boolean;
 
 #define NEW_LINE_SPACE 1

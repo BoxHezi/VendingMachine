@@ -39,7 +39,7 @@ void systemFree(VmSystem *system) {
  * validation. A substantial number of marks are allocated to this function.
  **/
 Boolean loadData(
-        VmSystem *system, const char *stockFileName, const char *coinsFileName) {
+      VmSystem *system, const char *stockFileName, const char *coinsFileName) {
    system->stockFileName = stockFileName;
    system->coinFileName = coinsFileName;
    return TRUE;

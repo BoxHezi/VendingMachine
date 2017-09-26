@@ -8,7 +8,7 @@ Boolean systemInit(VmSystem *system);
 void systemFree(VmSystem *system);
 
 Boolean loadData(
-        VmSystem *system, const char *stockFileName, const char *coinsFileName);
+      VmSystem *system, const char *stockFileName, const char *coinsFileName);
 
 Boolean loadStock(VmSystem *system, const char *fileName);
 

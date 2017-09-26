@@ -83,24 +83,24 @@ typedef struct coin {
  * passed around and manipulated.
  **/
 typedef struct vm_system {
-    /**
-     * The container for all the money in the system.
-     **/
+   /**
+    * The container for all the money in the system.
+    **/
    Coin cashRegister[NUM_DENOMS];
 
-    /**
-     * The linked list.
-     **/
+   /**
+    * The linked list.
+    **/
    List *itemList;
 
-    /**
-     * The name of the stock file.
-     **/
+   /**
+    * The name of the stock file.
+    **/
    const char *stockFileName;
 
-    /**
-     * The name of the coin file.
-     **/
+   /**
+    * The name of the coin file.
+    **/
    const char *coinFileName;
 } VmSystem;
 
