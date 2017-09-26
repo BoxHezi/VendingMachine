@@ -378,6 +378,7 @@ void purchaseItem(VmSystem *system) {
                            currentItem->data->desc, currentItem->data->price.dollars, currentItem->data->price.cents);
                     printf("Please hand over the money - type in the value of each note/coin in cents.\n");
 
+                    printf("If you don't want purchase, please hit enter to cancel\n");
                     makePayment(system, currentItem);
 
                     itemFound = TRUE;
@@ -403,7 +404,7 @@ Boolean makePayment(VmSystem *system, Node *node) {
     Boolean enoughAmount = FALSE;
 
     while (!priceValid) {
-        printf("If you don't want purchase, please hit enter to cancel: ");
+        printf("You need to give us $%d.%02d: ", node->data->price.dollars, node->data->price.cents);
         fgets(priceInput, sizeof(priceInput), stdin);
 
         if (strcmp("\n\0", priceInput) == 0) {
@@ -414,6 +415,7 @@ Boolean makePayment(VmSystem *system, Node *node) {
         if (priceInput[strlen(priceInput) - 1] != '\n') {
             printf("Invalid, try again\n");
             readRestOfLine();
+            continue;
         } else {
             priceInput[strlen(priceInput) - 1] = '\0';
             price = (unsigned) strtol(priceInput, NULL, 10);
