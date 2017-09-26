@@ -360,6 +360,7 @@ void purchaseItem(VmSystem *system) {
         printf("Please enter the id of the item you want to purchase: ");
         fgets(itemIDInput, sizeof(itemIDInput), stdin);
 
+        /* if user hit enter only, bring user back to main menu */
         if (strcmp(itemIDInput, "\n\0") == 0) {
             printf("Returning to Main Menu...\n");
             return;
@@ -488,7 +489,7 @@ Boolean checkIncomeValidation(VmSystem *system, char *priceInString) {
 
 Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, unsigned cents) {
     Boolean reachAmount = FALSE;
-    unsigned price = 0;
+    unsigned price = dollars * 100 + cents;
 
     /* use int, for centAmountDue might become negative */
     int dollarAmountDue = itemToPurchase->data->price.dollars;
@@ -500,7 +501,6 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
 
     char priceInput[MAX_PRICE_LENGTH + EXTRA_SPACES];
 
-
     /* check if user enter enough money to purchase item */
     while (!reachAmount) {
         if (dollars > dollarAmountDue) {
@@ -509,6 +509,15 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
             dollarAmountDue = dollarAmountDue - dollars;
             centAmountDue = centAmountDue - cents;
 
+            if (centAmountDue == 0 && dollarAmountDue == 0) {
+                reachAmount = TRUE;
+                price = 0;
+                break;
+            }
+
+            /* when centAmountDue less than 0
+             * re-calculate the dollarAmountDue and centAmountDue
+             */
             if (centAmountDue < 0) {
                 centAmountDue = centAmountDue + 100;
                 dollarAmountDue--;
