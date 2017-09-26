@@ -38,7 +38,11 @@ void printMenu(MenuItem *menu) {
     int i;
     int count = 0;
 
-    for (i = 0; i < 9; i++) {
+    /* loop through size of the array, and print out each option
+     * But print Main Menu at the first line and
+     * Admin-only menu after first three option
+     */
+    for (i = 0; i < sizeof(menu[0])/sizeof(menu) + 1; i++) {
         if (count == 0 && i == 0) {
             puts("Main Menu:");
             count++;
@@ -63,7 +67,7 @@ MenuFunction getMenuChoice(MenuItem *menu) {
     int option = 0;
 
     while (TRUE) {
-        printMenu(menu);
+
         printf("Select your option(1-9): ");
         fgets(optionInput, sizeof(optionInput), stdin);
 
@@ -71,31 +75,19 @@ MenuFunction getMenuChoice(MenuItem *menu) {
         if (optionInput[strlen(optionInput) - 1] != '\n') {
             printf("Invalid, try again\n");
             readRestOfLine();
+            return NULL;
         } else {
             /* convert user input to int */
             option = (int) strtol(optionInput, NULL, 10);
 
-            if (option == 1) {
-                return menu[option - 1].function;
-            } else if (option == 2) {
-                return menu[option - 1].function;
-            } else if (option == 3) {
-                return menu[option - 1].function;
-            } else if (option == 4) {
-                return menu[option - 1].function;
-            } else if (option == 5) {
-                return menu[option - 1].function;
-            } else if (option == 6) {
-                return menu[option - 1].function;
-            } else if (option == 7) {
-                return menu[option - 1].function;
-            } else if (option == 8) {
-                return menu[option - 1].function;
-            } else if (option == 9) {
-                return menu[option - 1].function;
+            /* check if option is valid */
+            if (option == 0) {
+                printf("Invalid Option. Try again\n");
+                break;
             } else {
-                printf("Invalid, try again\n");
+                return menu[option - 1].function;
             }
+
         }
 
     }

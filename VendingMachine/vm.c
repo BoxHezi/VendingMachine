@@ -5,6 +5,7 @@
 int main(int argc, char **argv) {
     VmSystem vendingSystem;
     MenuItem menu[MENU_LENGTH];
+    MenuFunction choice;
 
     systemInit(&vendingSystem);
     if (argc != 3) {
@@ -22,7 +23,17 @@ int main(int argc, char **argv) {
 
     initMenu(menu);
     while (TRUE) {
-        getMenuChoice(menu)(&vendingSystem);
+        printMenu(menu);
+        choice = getMenuChoice(menu);
+
+        if (choice == saveAndExit) {
+            break;
+        } else if (choice == NULL) {
+            continue;
+        }
+        else {
+            (*choice)(&vendingSystem);
+        }
     }
 
     printf("Goodbye. \n\n");
