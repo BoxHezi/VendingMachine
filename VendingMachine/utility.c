@@ -6,12 +6,10 @@
  * to the materials on string and buffer handling in the course for more
  * information.
  **/
-void readRestOfLine()
-{
-    int ch;
-    while(ch = getc(stdin), ch != EOF && ch != '\n')
-    { } /* Gobble each character. */
+void readRestOfLine() {
+   int ch;
+   while (ch = getc(stdin), ch != EOF && ch != '\n') {} /* Gobble each character. */
 
-    /* Reset the error status of the stream. */
-    clearerr(stdin);
+   /* Reset the error status of the stream. */
+   clearerr(stdin);
 }

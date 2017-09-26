@@ -8,8 +8,7 @@
 #include <time.h>
 #include <assert.h>
 
-typedef enum boolean
-{
+typedef enum boolean {
     FALSE = 0,
     TRUE
 } Boolean;

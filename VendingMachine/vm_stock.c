@@ -12,82 +12,82 @@
 
 /* initialize list */
 List *initList() {
-    List *list = malloc(sizeof(*list));
-    if (list == NULL) {
-        exit(EXIT_FAILURE);
-    } else {
-        list->head = NULL;
-        list->size = 0;
-    }
+   List *list = malloc(sizeof(*list));
+   if (list == NULL) {
+      exit(EXIT_FAILURE);
+   } else {
+      list->head = NULL;
+      list->size = 0;
+   }
 
-    return list;
+   return list;
 }
 
 /* create new node */
 Node *createNode(Stock *stock, Node *node) {
-    node->data = stock;
-    node->next = NULL;
-    return node;
+   node->data = stock;
+   node->next = NULL;
+   return node;
 }
 
 void addToList(List *list, Node *node) {
-    Node *tempNode;
+   Node *tempNode;
 
-    /* set node next to NULL avoid invalid pointer be added */
-    node->next = NULL;
+   /* set node next to NULL avoid invalid pointer be added */
+   node->next = NULL;
 
-    /* check for the first time addition */
-    if (list->head == NULL) {
-        list->head = node;
-    } else {
-        tempNode = list->head;
-        while (TRUE) {
-            if (tempNode->next == NULL) {
-                tempNode->next = node;
-                break;
-            }
-            tempNode = tempNode->next;
+   /* check for the first time addition */
+   if (list->head == NULL) {
+      list->head = node;
+   } else {
+      tempNode = list->head;
+      while (TRUE) {
+         if (tempNode->next == NULL) {
+            tempNode->next = node;
+            break;
+         }
+         tempNode = tempNode->next;
 
-        }
-    }
+      }
+   }
 
-    list->size++;
+   list->size++;
 }
 
 void assignValueToStock(char *data, Stock *stock) {
-    /* get stock data from each line */
-    char *id;
-    char *name;
-    char *desc;
-    char *priceInString;
-    char *dollarInString;
-    char *centInString;
-    char *onHandInString;
+   /* get stock data from each line */
+   char *id;
+   char *name;
+   char *desc;
+   char *priceInString;
+   char *dollarInString;
+   char *centInString;
+   char *onHandInString;
 
-    /* store value that convert string to int */
-    unsigned dollars;
-    unsigned cents;
-    unsigned onHand;
+   /* store value that convert string to int */
+   unsigned dollars;
+   unsigned cents;
+   unsigned onHand;
 
-    id = strtok(data, STOCK_DELIM);
-    name = strtok(NULL, STOCK_DELIM);
-    desc = strtok(NULL, STOCK_DELIM);
-    priceInString = strtok(NULL, STOCK_DELIM);
-    onHandInString = strtok(NULL, STOCK_DELIM);
+   id = strtok(data, STOCK_DELIM);
+   name = strtok(NULL, STOCK_DELIM);
+   desc = strtok(NULL, STOCK_DELIM);
+   priceInString = strtok(NULL, STOCK_DELIM);
+   onHandInString = strtok(NULL, STOCK_DELIM);
 
-    /* get dollars and cents from price as a string */
-    dollarInString = strtok(priceInString, ".");
-    centInString = strtok(NULL, ".");
+   /* get dollars and cents from price as a string */
+   dollarInString = strtok(priceInString, ".");
+   centInString = strtok(NULL, ".");
 
-    /* change and cast dollars, cents and onHand to unsigned */
-    dollars = (unsigned) strtol(dollarInString, NULL, 10);
-    cents = (unsigned) strtol(centInString, NULL, 10);
-    onHand = (unsigned) strtol(onHandInString, NULL, 10);
+   /* change and cast dollars, cents and onHand to unsigned */
+   dollars = (unsigned) strtol(dollarInString, NULL, 10);
+   cents = (unsigned) strtol(centInString, NULL, 10);
+   onHand = (unsigned) strtol(onHandInString, NULL, 10);
 
-    strcpy(stock->id, id);
-    strcpy(stock->name, name);
-    strcpy(stock->desc, desc);
-    stock->price.dollars = dollars;
-    stock->price.cents = cents;
-    stock->onHand = onHand;
+   strcpy(stock->id, id);
+   strcpy(stock->name, name);
+   strcpy(stock->desc, desc);
+   stock->price.dollars = dollars;
+   stock->price.cents = cents;
+   stock->onHand = onHand;
 }

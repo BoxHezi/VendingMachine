@@ -12,10 +12,10 @@
  */
 
 void initCoins(Coin *cashRegister) {
-    int i;
-    Denomination denomination = FIVE_CENTS;
-    for (i = 0; i < NUM_DENOMS; i++) {
-        cashRegister[i].count = DEFAULT_COIN_COUNT;
-        cashRegister[i].denom = denomination++;
-    }
+   int i;
+   Denomination denomination = FIVE_CENTS;
+   for (i = 0; i < NUM_DENOMS; i++) {
+      cashRegister[i].count = DEFAULT_COIN_COUNT;
+      cashRegister[i].denom = denomination++;
+   }
 }

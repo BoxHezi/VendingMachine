@@ -15,12 +15,12 @@
  * defined in vm_system.h.
  **/
 Boolean systemInit(VmSystem *system) {
-    system->itemList = initList();
-    initCoins(system->cashRegister);
-    system->stockFileName = NULL;
-    system->coinFileName = NULL;
+   system->itemList = initList();
+   initCoins(system->cashRegister);
+   system->stockFileName = NULL;
+   system->coinFileName = NULL;
 
-    return TRUE;
+   return TRUE;
 }
 
 /**
@@ -29,7 +29,7 @@ Boolean systemInit(VmSystem *system) {
  * and run it through valgrind.
  **/
 void systemFree(VmSystem *system) {
-    free(system->itemList);
+   free(system->itemList);
 }
 
 /**
@@ -40,40 +40,40 @@ void systemFree(VmSystem *system) {
  **/
 Boolean loadData(
         VmSystem *system, const char *stockFileName, const char *coinsFileName) {
-    system->stockFileName = stockFileName;
-    system->coinFileName = coinsFileName;
-    return TRUE;
+   system->stockFileName = stockFileName;
+   system->coinFileName = coinsFileName;
+   return TRUE;
 }
 
 /**
  * Loads the stock file data into the system.
  **/
 Boolean loadStock(VmSystem *system, const char *fileName) {
-    char data[MAX_DATA_LENGTH];
+   char data[MAX_DATA_LENGTH];
 
-    /* load stock file */
-    FILE *stockFile;
-    stockFile = fopen(fileName, "r");
+   /* load stock file */
+   FILE *stockFile;
+   stockFile = fopen(fileName, "r");
 
-    if (stockFile == NULL) {
-        printf("No stock file found!\n");
-        return FALSE;
-    }
+   if (stockFile == NULL) {
+      printf("No stock file found!\n");
+      return FALSE;
+   }
 
-    system->stockFileName = fileName;
+   system->stockFileName = fileName;
 
-    /* while the file has next line */
-    while (fgets(data, sizeof(data), stockFile) != NULL) {
-        Node *node = malloc(sizeof(Node));
-        Stock *stock = malloc(sizeof(Stock));
-        assignValueToStock(data, stock);
+   /* while the file has next line */
+   while (fgets(data, sizeof(data), stockFile) != NULL) {
+      Node *node = malloc(sizeof(Node));
+      Stock *stock = malloc(sizeof(Stock));
+      assignValueToStock(data, stock);
 
-        createNode(stock, node);
-        addToList(system->itemList, node);
-    }
+      createNode(stock, node);
+      addToList(system->itemList, node);
+   }
 
-    fclose(stockFile);
-    return TRUE;
+   fclose(stockFile);
+   return TRUE;
 }
 
 /**
@@ -82,32 +82,32 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
 Boolean loadCoins(VmSystem *system, const char *fileName) {
 
 
-    FILE *coinsFile;
-    coinsFile = fopen(fileName, "r");
+   FILE *coinsFile;
+   coinsFile = fopen(fileName, "r");
 
-    if (coinsFile == NULL) {
-        printf("No coins file found");
-        return FALSE;
-    }
+   if (coinsFile == NULL) {
+      printf("No coins file found");
+      return FALSE;
+   }
 
-    system->coinFileName = fileName;
+   system->coinFileName = fileName;
 
-    fclose(coinsFile);
-    return TRUE;
+   fclose(coinsFile);
+   return TRUE;
 }
 
 /**
  * Saves all the stock back to the stock file.
  **/
 Boolean saveStock(VmSystem *system) {
-    return FALSE;
+   return FALSE;
 }
 
 /**
  * Saves all the coins back to the coins file.
  **/
 Boolean saveCoins(VmSystem *system) {
-    return FALSE;
+   return FALSE;
 }
 
 /**
@@ -115,230 +115,230 @@ Boolean saveCoins(VmSystem *system) {
  * This is the data loaded into the linked list in the requirement 2.
  **/
 void displayItems(VmSystem *system) {
-    unsigned idSize = 0;
-    unsigned nameSize = 0;
-    unsigned priceSize = 0;
-    unsigned dollarSize = 0;
-    unsigned centSize = 0;
-    unsigned onHandSize = 0;
+   unsigned idSize = 0;
+   unsigned nameSize = 0;
+   unsigned priceSize = 0;
+   unsigned dollarSize = 0;
+   unsigned centSize = 0;
+   unsigned onHandSize = 0;
 
-    /* tempAmount is used to calculate length of int
-     * (dollarSize, centSize and onHandSize)
-     */
-    unsigned tempAmount = 0;
+   /* tempAmount is used to calculate length of int
+    * (dollarSize, centSize and onHandSize)
+    */
+   unsigned tempAmount = 0;
 
-    unsigned tempSize = 0;
+   unsigned tempSize = 0;
 
-    unsigned printSize = 0;
-    unsigned totalPrintSize = 0;
-    int i, j;
+   unsigned printSize = 0;
+   unsigned totalPrintSize = 0;
+   int i, j;
 
-    Node *current = system->itemList->head;
+   Node *current = system->itemList->head;
 
-    /*
-     * calculate size need for each section dynamically
-     */
+   /*
+    * calculate size need for each section dynamically
+    */
 
-    /* calculate max id size */
-    for (j = 0; j < system->itemList->size; j++) {
-        tempSize = (unsigned) strlen(current->data->id);
-        if (idSize < tempSize) {
-            idSize = tempSize;
-        }
-        current = current->next;
-    }
+   /* calculate max id size */
+   for (j = 0; j < system->itemList->size; j++) {
+      tempSize = (unsigned) strlen(current->data->id);
+      if (idSize < tempSize) {
+         idSize = tempSize;
+      }
+      current = current->next;
+   }
 
-    current = system->itemList->head;
-    for (j = 0; j < system->itemList->size; j++) {
-        tempSize = (unsigned) strlen(current->data->name);
-        if (nameSize < tempSize) {
-            nameSize = tempSize;
-        }
-        current = current->next;
-    }
+   current = system->itemList->head;
+   for (j = 0; j < system->itemList->size; j++) {
+      tempSize = (unsigned) strlen(current->data->name);
+      if (nameSize < tempSize) {
+         nameSize = tempSize;
+      }
+      current = current->next;
+   }
 
-    current = system->itemList->head;
-    for (j = 0; j < system->itemList->size; j++) {
-        tempSize = 0;
-        tempAmount = current->data->price.dollars;
-        while ((double) tempAmount / 10 > 0) {
-            if ((double) tempAmount / 10 < 1) {
-                tempSize++;
-                break;
-            }
-            tempAmount /= 10;
+   current = system->itemList->head;
+   for (j = 0; j < system->itemList->size; j++) {
+      tempSize = 0;
+      tempAmount = current->data->price.dollars;
+      while ((double) tempAmount / 10 > 0) {
+         if ((double) tempAmount / 10 < 1) {
             tempSize++;
-        }
-        if (dollarSize < tempSize) {
-            dollarSize = tempSize;
-        }
-        current = current->next;
-    }
-    priceSize = dollarSize;
+            break;
+         }
+         tempAmount /= 10;
+         tempSize++;
+      }
+      if (dollarSize < tempSize) {
+         dollarSize = tempSize;
+      }
+      current = current->next;
+   }
+   priceSize = dollarSize;
 
-    current = system->itemList->head;
-    for (j = 0; j < system->itemList->size; j++) {
-        tempSize = 0;
-        tempAmount = current->data->price.cents;
-        while ((double) tempAmount / 10 > 0) {
-            if ((double) tempAmount / 10 < 1) {
-                tempSize++;
-                break;
-            }
-            tempAmount /= 10;
+   current = system->itemList->head;
+   for (j = 0; j < system->itemList->size; j++) {
+      tempSize = 0;
+      tempAmount = current->data->price.cents;
+      while ((double) tempAmount / 10 > 0) {
+         if ((double) tempAmount / 10 < 1) {
             tempSize++;
-        }
-        if (centSize < tempSize) {
-            centSize = tempSize;
-        }
-        current = current->next;
-    }
-    /* +1 for the dot and $ sign */
-    priceSize += centSize + 2;
+            break;
+         }
+         tempAmount /= 10;
+         tempSize++;
+      }
+      if (centSize < tempSize) {
+         centSize = tempSize;
+      }
+      current = current->next;
+   }
+   /* +1 for the dot and $ sign */
+   priceSize += centSize + 2;
 
-    current = system->itemList->head;
-    for (j = 0; j < system->itemList->size; j++) {
-        tempSize = 0;
-        tempAmount = current->data->onHand;
-        while ((double) tempAmount / 10 > 10) {
-            if ((double) tempAmount / 10 < 1) {
-                tempSize++;
-                break;
-            }
-            tempAmount /= 10;
+   current = system->itemList->head;
+   for (j = 0; j < system->itemList->size; j++) {
+      tempSize = 0;
+      tempAmount = current->data->onHand;
+      while ((double) tempAmount / 10 > 10) {
+         if ((double) tempAmount / 10 < 1) {
             tempSize++;
-        }
-        if (onHandSize < tempSize) {
-            onHandSize = tempSize;
-        }
-        current = current->next;
-    }
+            break;
+         }
+         tempAmount /= 10;
+         tempSize++;
+      }
+      if (onHandSize < tempSize) {
+         onHandSize = tempSize;
+      }
+      current = current->next;
+   }
 
-    printf("ID");
-    printSize = (unsigned) strlen("ID");
-    if (idSize < printSize) {
-        idSize = printSize;
-    }
-    while (printSize < idSize) {
-        printf(" ");
-        printSize++;
-    }
-    printf(" | ");
+   printf("ID");
+   printSize = (unsigned) strlen("ID");
+   if (idSize < printSize) {
+      idSize = printSize;
+   }
+   while (printSize < idSize) {
+      printf(" ");
+      printSize++;
+   }
+   printf(" | ");
 
-    printf("Name");
-    printSize = (unsigned) strlen("Name");
-    if (nameSize < printSize) {
-        nameSize = printSize;
-    }
-    while (printSize < nameSize) {
-        printf(" ");
-        printSize++;
-    }
-    printf(" | ");
+   printf("Name");
+   printSize = (unsigned) strlen("Name");
+   if (nameSize < printSize) {
+      nameSize = printSize;
+   }
+   while (printSize < nameSize) {
+      printf(" ");
+      printSize++;
+   }
+   printf(" | ");
 
-    printf("Available");
-    printSize = (unsigned) strlen("Available");
-    if (onHandSize < printSize) {
-        onHandSize = printSize;
-    }
-    while (printSize < onHandSize) {
-        printf(" ");
-        printSize++;
-    }
-    printf(" | ");
+   printf("Available");
+   printSize = (unsigned) strlen("Available");
+   if (onHandSize < printSize) {
+      onHandSize = printSize;
+   }
+   while (printSize < onHandSize) {
+      printf(" ");
+      printSize++;
+   }
+   printf(" | ");
 
-    printf("Price");
-    printSize = (unsigned) strlen("Price");
-    if (priceSize < printSize) {
-        priceSize = printSize;
-    }
-    while (printSize < priceSize) {
-        printf(" ");
-        printSize++;
-    }
-
-
-
-    /* +9 for 4 vertical bars in the menu and spaces after and before | */
-    totalPrintSize = idSize + nameSize + priceSize + onHandSize + 9;
-    printf("\n");
-    for (i = 0; i < totalPrintSize; i++) {
-        printf("-");
-    }
-    printf("\n");
+   printf("Price");
+   printSize = (unsigned) strlen("Price");
+   if (priceSize < printSize) {
+      priceSize = printSize;
+   }
+   while (printSize < priceSize) {
+      printf(" ");
+      printSize++;
+   }
 
 
-    current = system->itemList->head;
-    while (current != NULL) {
 
-        printf("%s", current->data->id);
-        printSize = (unsigned) strlen(current->data->id);
-        /* print vertical alignment */
-        while (printSize < idSize) {
-            printf(" ");
+   /* +9 for 4 vertical bars in the menu and spaces after and before | */
+   totalPrintSize = idSize + nameSize + priceSize + onHandSize + 9;
+   printf("\n");
+   for (i = 0; i < totalPrintSize; i++) {
+      printf("-");
+   }
+   printf("\n");
+
+
+   current = system->itemList->head;
+   while (current != NULL) {
+
+      printf("%s", current->data->id);
+      printSize = (unsigned) strlen(current->data->id);
+      /* print vertical alignment */
+      while (printSize < idSize) {
+         printf(" ");
+         printSize++;
+      }
+      printf(" | ");
+
+      printf("%s", current->data->name);
+      printSize = (unsigned) strlen(current->data->name);
+      while (printSize < nameSize) {
+         printf(" ");
+         printSize++;
+      }
+      printf(" | ");
+
+      printf("%d", current->data->onHand);
+      printSize = 0;
+      tempAmount = current->data->onHand;
+      while ((double) tempAmount / 10 > 0) {
+         if ((double) tempAmount / 10 < 1) {
             printSize++;
-        }
-        printf(" | ");
+            break;
+         }
+         tempAmount /= 10;
+         printSize++;
+      }
 
-        printf("%s", current->data->name);
-        printSize = (unsigned) strlen(current->data->name);
-        while (printSize < nameSize) {
-            printf(" ");
+      while (printSize < onHandSize) {
+         printf(" ");
+         printSize++;
+      }
+      printf(" | ");
+
+      printf("$%d.%02d", current->data->price.dollars, current->data->price.cents);
+      printSize = 0;
+      tempAmount = current->data->price.dollars;
+      while ((double) tempAmount / 10 > 0) {
+         if ((double) tempAmount / 10 < 1) {
             printSize++;
-        }
-        printf(" | ");
-
-        printf("%d", current->data->onHand);
-        printSize = 0;
-        tempAmount = current->data->onHand;
-        while ((double) tempAmount / 10 > 0) {
-            if ((double) tempAmount / 10 < 1) {
-                printSize++;
-                break;
-            }
-            tempAmount /= 10;
+            break;
+         }
+         tempAmount /= 10;
+         printSize++;
+      }
+      priceSize = printSize;
+      tempAmount = current->data->price.cents;
+      while ((double) tempAmount / 10 > 0) {
+         if ((double) tempAmount / 10 < 1) {
             printSize++;
-        }
-
-        while (printSize < onHandSize) {
-            printf(" ");
-            printSize++;
-        }
-        printf(" | ");
-
-        printf("$%d.%02d", current->data->price.dollars, current->data->price.cents);
-        printSize = 0;
-        tempAmount = current->data->price.dollars;
-        while ((double) tempAmount / 10 > 0) {
-            if ((double) tempAmount / 10 < 1) {
-                printSize++;
-                break;
-            }
-            tempAmount /= 10;
-            printSize++;
-        }
-        priceSize = printSize;
-        tempAmount = current->data->price.cents;
-        while ((double) tempAmount / 10 > 0) {
-            if ((double) tempAmount / 10 < 1) {
-                printSize++;
-                break;
-            }
-            tempAmount /= 10;
-            printSize++;
-        }
-        centSize = printSize;
-        printSize = priceSize + centSize + 2;
-        while (printSize < priceSize) {
-            printf(" ");
-            printSize++;
-        }
-        printf("\n");
+            break;
+         }
+         tempAmount /= 10;
+         printSize++;
+      }
+      centSize = printSize;
+      printSize = priceSize + centSize + 2;
+      while (printSize < priceSize) {
+         printf(" ");
+         printSize++;
+      }
+      printf("\n");
 
 
-        current = current->next;
+      current = current->next;
 
-    }
+   }
 }
 
 /**
@@ -346,228 +346,228 @@ void displayItems(VmSystem *system) {
  * This function implements requirement 5 of the assignment specification.
  **/
 void purchaseItem(VmSystem *system) {
-    Boolean itemFound = FALSE;
-    char itemIDInput[ITEM_ID + EXTRA_SPACES];
-    Node *currentItem;
+   Boolean itemFound = FALSE;
+   char itemIDInput[ITEM_ID + EXTRA_SPACES];
+   Node *currentItem;
 
-    printf("Purchase Item\n");
-    printf("----------------\n");
+   printf("Purchase Item\n");
+   printf("----------------\n");
 
-    while (!itemFound) {
-        /* reset the currentItem point to first item in the list */
-        currentItem = system->itemList->head;
+   while (!itemFound) {
+      /* reset the currentItem point to first item in the list */
+      currentItem = system->itemList->head;
 
-        printf("Please enter the id of the item you want to purchase: ");
-        fgets(itemIDInput, sizeof(itemIDInput), stdin);
+      printf("Please enter the id of the item you want to purchase: ");
+      fgets(itemIDInput, sizeof(itemIDInput), stdin);
 
-        /* if user hit enter only, bring user back to main menu */
-        if (strcmp(itemIDInput, "\n\0") == 0) {
-            printf("Returning to Main Menu...\n");
-            return;
-        }
+      /* if user hit enter only, bring user back to main menu */
+      if (strcmp(itemIDInput, "\n\0") == 0) {
+         printf("Returning to Main Menu...\n");
+         return;
+      }
 
-        if (itemIDInput[strlen(itemIDInput) - 1] != '\n') {
-            printf("Invalid input, try again\n");
-            readRestOfLine();
-        } else {
-            itemIDInput[strlen(itemIDInput) - 1] = '\0';
-            while (currentItem != NULL) {
-                if (strcmp(itemIDInput, currentItem->data->id) == 0) {
-                    printf("Item Found\n");
-                    printf("You have selected \"%s\t%s\". This wil be cost you $%d.%02d.\n", currentItem->data->name,
-                           currentItem->data->desc, currentItem->data->price.dollars, currentItem->data->price.cents);
-                    printf("Please hand over the money - type in the value of each note/coin in cents.\n");
+      if (itemIDInput[strlen(itemIDInput) - 1] != '\n') {
+         printf("Invalid input, try again\n");
+         readRestOfLine();
+      } else {
+         itemIDInput[strlen(itemIDInput) - 1] = '\0';
+         while (currentItem != NULL) {
+            if (strcmp(itemIDInput, currentItem->data->id) == 0) {
+               printf("Item Found\n");
+               printf("You have selected \"%s\t%s\". This wil be cost you $%d.%02d.\n", currentItem->data->name,
+                      currentItem->data->desc, currentItem->data->price.dollars, currentItem->data->price.cents);
+               printf("Please hand over the money - type in the value of each note/coin in cents.\n");
 
-                    printf("If you don't want purchase, please hit enter to cancel\n");
-                    makePayment(system, currentItem);
+               printf("If you don't want purchase, please hit enter to cancel\n");
+               makePayment(system, currentItem);
 
-                    itemFound = TRUE;
-                }
-
-                currentItem = currentItem->next;
+               itemFound = TRUE;
             }
-            if (!itemFound) {
-                printf("Item Not Found\n");
-            } else {
-                break;
-            }
-        }
-    }
+
+            currentItem = currentItem->next;
+         }
+         if (!itemFound) {
+            printf("Item Not Found\n");
+         } else {
+            break;
+         }
+      }
+   }
 }
 
 Boolean makePayment(VmSystem *system, Node *node) {
-    char priceInput[MAX_PRICE_LENGTH + EXTRA_SPACES];
-    unsigned price = 0;
-    unsigned dollars = 0;
-    unsigned cents = 0;
-    Boolean priceValid = FALSE;
-    Boolean enoughAmount = FALSE;
+   char priceInput[MAX_PRICE_LENGTH + EXTRA_SPACES];
+   unsigned price = 0;
+   unsigned dollars = 0;
+   unsigned cents = 0;
+   Boolean priceValid = FALSE;
+   Boolean enoughAmount = FALSE;
 
-    while (!priceValid) {
-        printf("You need to give us $%d.%02d: ", node->data->price.dollars, node->data->price.cents);
-        fgets(priceInput, sizeof(priceInput), stdin);
+   while (!priceValid) {
+      printf("You need to give us $%d.%02d: ", node->data->price.dollars, node->data->price.cents);
+      fgets(priceInput, sizeof(priceInput), stdin);
 
-        if (strcmp("\n\0", priceInput) == 0) {
-            printf("Returning to menu...\n");
-            return FALSE;
-        }
+      if (strcmp("\n\0", priceInput) == 0) {
+         printf("Returning to menu...\n");
+         return FALSE;
+      }
 
-        if (priceInput[strlen(priceInput) - 1] != '\n') {
-            printf("Invalid, try again\n");
-            readRestOfLine();
+      if (priceInput[strlen(priceInput) - 1] != '\n') {
+         printf("Invalid, try again\n");
+         readRestOfLine();
+         continue;
+      } else {
+         priceInput[strlen(priceInput) - 1] = '\0';
+         price = (unsigned) strtol(priceInput, NULL, 10);
+
+         dollars = price / 100;
+         cents = price % 100;
+
+         if (!checkIncomeValidation(system, priceInput)) {
+            printf("Error: $%d.%02d is not a valid denomination of money\n", dollars, cents);
             continue;
-        } else {
-            priceInput[strlen(priceInput) - 1] = '\0';
-            price = (unsigned) strtol(priceInput, NULL, 10);
+         } else {
+            priceValid = TRUE;
+         }
+      }
 
-            dollars = price / 100;
-            cents = price % 100;
+      enoughAmount = checkAmount(system, node, dollars, cents);
+      if (!enoughAmount) {
+         printf("Returning to Main Menu...\n");
+         return enoughAmount;
+      }
+   }
 
-            if (!checkIncomeValidation(system, priceInput)) {
-                printf("Error: $%d.%02d is not a valid denomination of money\n", dollars, cents);
-                continue;
-            } else {
-                priceValid = TRUE;
-            }
-        }
-
-        enoughAmount = checkAmount(system, node, dollars, cents);
-        if (!enoughAmount) {
-            printf("Returning to Main Menu...\n");
-            return enoughAmount;
-        }
-    }
-
-    return enoughAmount;
+   return enoughAmount;
 
 }
 
 /* function to check correct denomination of coins input */
 Boolean checkIncomeValidation(VmSystem *system, char *priceInString) {
-    Boolean validIncome = FALSE;
-    unsigned price = 0;
-    int i;
+   Boolean validIncome = FALSE;
+   unsigned price = 0;
+   int i;
 
-    price = (unsigned) strtol(priceInString, NULL, 10);
-    switch (price) {
-        case 5:
-            price = FIVE_CENTS;
-            break;
-        case 10:
-            price = TEN_CENTS;
-            break;
-        case 20:
-            price = TWENTY_CENTS;
-            break;
-        case 50:
-            price = FIFTY_CENTS;
-            break;
-        case 100:
-            price = ONE_DOLLAR;
-            break;
-        case 200:
-            price = TWO_DOLLARS;
-            break;
-        case 500:
-            price = FIVE_DOLLARS;
-            break;
-        case 1000:
-            price = TEN_DOLLARS;
-            break;
-        default:
-            validIncome = FALSE;
-            break;
-    }
+   price = (unsigned) strtol(priceInString, NULL, 10);
+   switch (price) {
+      case 5:
+         price = FIVE_CENTS;
+         break;
+      case 10:
+         price = TEN_CENTS;
+         break;
+      case 20:
+         price = TWENTY_CENTS;
+         break;
+      case 50:
+         price = FIFTY_CENTS;
+         break;
+      case 100:
+         price = ONE_DOLLAR;
+         break;
+      case 200:
+         price = TWO_DOLLARS;
+         break;
+      case 500:
+         price = FIVE_DOLLARS;
+         break;
+      case 1000:
+         price = TEN_DOLLARS;
+         break;
+      default:
+         validIncome = FALSE;
+         break;
+   }
 
-    for (i = 0; i < NUM_DENOMS; i++) {
-        if (price == system->cashRegister[i].denom) {
-            validIncome = TRUE;
-            break;
-        }
-    }
+   for (i = 0; i < NUM_DENOMS; i++) {
+      if (price == system->cashRegister[i].denom) {
+         validIncome = TRUE;
+         break;
+      }
+   }
 
-    return validIncome;
+   return validIncome;
 }
 
 Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, unsigned cents) {
-    Boolean reachAmount = FALSE;
-    unsigned price = dollars * 100 + cents;
+   Boolean reachAmount = FALSE;
+   unsigned price = dollars * 100 + cents;
 
-    /* use int, for centAmountDue might become negative */
-    int dollarAmountDue = itemToPurchase->data->price.dollars;
-    int centAmountDue = itemToPurchase->data->price.cents;
+   /* use int, for centAmountDue might become negative */
+   int dollarAmountDue = itemToPurchase->data->price.dollars;
+   int centAmountDue = itemToPurchase->data->price.cents;
 
-    unsigned change = 0;
-    unsigned dollarChange = 0;
-    unsigned centChange = 0;
+   unsigned change = 0;
+   unsigned dollarChange = 0;
+   unsigned centChange = 0;
 
-    char priceInput[MAX_PRICE_LENGTH + EXTRA_SPACES];
+   char priceInput[MAX_PRICE_LENGTH + EXTRA_SPACES];
 
-    /* check if user enter enough money to purchase item */
-    while (!reachAmount) {
-        if (dollars > dollarAmountDue) {
-            reachAmount = TRUE;
-        } else {
-            dollarAmountDue = dollarAmountDue - dollars;
-            centAmountDue = centAmountDue - cents;
+   /* check if user enter enough money to purchase item */
+   while (!reachAmount) {
+      if (dollars > dollarAmountDue) {
+         reachAmount = TRUE;
+      } else {
+         dollarAmountDue = dollarAmountDue - dollars;
+         centAmountDue = centAmountDue - cents;
 
-            if (centAmountDue == 0 && dollarAmountDue == 0) {
-                price = 0;
-                break;
+         if (centAmountDue == 0 && dollarAmountDue == 0) {
+            price = 0;
+            break;
+         }
+
+         /* when centAmountDue less than 0
+          * re-calculate the dollarAmountDue and centAmountDue
+          */
+         if (centAmountDue < 0) {
+            centAmountDue = centAmountDue + 100;
+            dollarAmountDue--;
+         }
+
+         printf("You still need to give us $%d.%02d: ", dollarAmountDue, centAmountDue);
+         fgets(priceInput, sizeof(priceInput), stdin);
+
+         if (strcmp(priceInput, "\n\0") == 0) {
+            return FALSE;
+         }
+
+         if (priceInput[strlen(priceInput) - 1] != '\n') {
+            printf("Invalid, try again\n");
+            readRestOfLine();
+         } else {
+            priceInput[strlen(priceInput) - 1] = '\0';
+            price = (unsigned) strtol(priceInput, NULL, 10);
+            dollars = price / 100;
+            cents = price % 100;
+
+            if (!checkIncomeValidation(system, priceInput)) {
+               printf("Error: $%d.%02d is not a valid denomination of money\n", dollars, cents);
+
+               /* avoid decrease of dollarAmountDue if some invalid amount is input */
+               dollarAmountDue = dollarAmountDue + dollars;
+               centAmountDue = centAmountDue + cents;
+               continue;
             }
 
-            /* when centAmountDue less than 0
-             * re-calculate the dollarAmountDue and centAmountDue
-             */
-            if (centAmountDue < 0) {
-                centAmountDue = centAmountDue + 100;
-                dollarAmountDue--;
+            if (dollars > dollarAmountDue) {
+               reachAmount = TRUE;
             }
 
-            printf("You still need to give us $%d.%02d: ", dollarAmountDue, centAmountDue);
-            fgets(priceInput, sizeof(priceInput), stdin);
+         }
+      }
 
-            if (strcmp(priceInput, "\n\0") == 0) {
-                return FALSE;
-            }
+   }
 
-            if (priceInput[strlen(priceInput) - 1] != '\n') {
-                printf("Invalid, try again\n");
-                readRestOfLine();
-            } else {
-                priceInput[strlen(priceInput) - 1] = '\0';
-                price = (unsigned) strtol(priceInput, NULL, 10);
-                dollars = price / 100;
-                cents = price % 100;
+   change = price - (dollarAmountDue * 100 + centAmountDue);
+   dollarChange = change / 100;
+   centChange = change % 100;
 
-                if (!checkIncomeValidation(system, priceInput)) {
-                    printf("Error: $%d.%02d is not a valid denomination of money\n", dollars, cents);
+   printf("Thank you, here is your %s, and your change of $%d.%02d.\n",
+          itemToPurchase->data->name,
+          dollarChange, centChange);
+   printf("Please come back soon.\n");
 
-                    /* avoid decrease of dollarAmountDue if some invalid amount is input */
-                    dollarAmountDue = dollarAmountDue + dollars;
-                    centAmountDue = centAmountDue + cents;
-                    continue;
-                }
-
-                if (dollars > dollarAmountDue) {
-                    reachAmount = TRUE;
-                }
-
-            }
-        }
-
-    }
-
-    change = price - (dollarAmountDue * 100 + centAmountDue);
-    dollarChange = change / 100;
-    centChange = change % 100;
-
-    printf("Thank you, here is your %s, and your change of $%d.%02d.\n",
-           itemToPurchase->data->name,
-           dollarChange, centChange);
-    printf("Please come back soon.\n");
-
-    return reachAmount;
+   return reachAmount;
 }
 
 /**
@@ -576,10 +576,10 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
  * This function implements requirement 6 of the assignment specification.
  **/
 void saveAndExit(VmSystem *system) {
-    saveStock(system);
-    saveCoins(system);
+   saveStock(system);
+   saveCoins(system);
 
-    exit(EXIT_SUCCESS);
+   exit(EXIT_SUCCESS);
 }
 
 /**
@@ -624,7 +624,7 @@ void resetCoins(VmSystem *system) {}
  * This function implements requirement 10 of the assignment specification.
  **/
 void abortProgram(VmSystem *system) {
-    printf("Aborting...\n");
-    systemFree(system);
-    exit(0);
+   printf("Aborting...\n");
+   systemFree(system);
+   exit(0);
 }
