@@ -510,7 +510,6 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
             centAmountDue = centAmountDue - cents;
 
             if (centAmountDue == 0 && dollarAmountDue == 0) {
-                reachAmount = TRUE;
                 price = 0;
                 break;
             }
@@ -541,6 +540,7 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
 
                 if (!checkIncomeValidation(system, priceInput)) {
                     printf("Error: $%d.%02d is not a valid denomination of money\n", dollars, cents);
+
                     /* avoid decrease of dollarAmountDue if some invalid amount is input */
                     dollarAmountDue = dollarAmountDue + dollars;
                     centAmountDue = centAmountDue + cents;
@@ -560,7 +560,8 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
     dollarChange = change / 100;
     centChange = change % 100;
 
-    printf("Thank you, here is your %s, and your change of $%d.%02d.\n", itemToPurchase->data->name,
+    printf("Thank you, here is your %s, and your change of $%d.%02d.\n",
+           itemToPurchase->data->name,
            dollarChange, centChange);
     printf("Please come back soon.\n");
 
