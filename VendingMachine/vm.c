@@ -28,6 +28,8 @@ int main(int argc, char **argv) {
 
       if (choice == saveAndExit) {
          break;
+      } else if (choice == NULL) {
+         continue;
       } else {
          (*choice)(&vendingSystem);
       }

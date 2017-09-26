@@ -193,7 +193,7 @@ void displayItems(VmSystem *system) {
       }
       current = current->next;
    }
-   /* +1 for the dot and $ sign */
+   /* +2 for the dot and $ sign */
    priceSize += centSize + 2;
 
    current = system->itemList->head;
@@ -339,6 +339,12 @@ void displayItems(VmSystem *system) {
       current = current->next;
 
    }
+
+   for (i = 0; i < totalPrintSize; i++) {
+      printf("-");
+   }
+   printf("\n");
+
 }
 
 /**

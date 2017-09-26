@@ -75,14 +75,14 @@ MenuFunction getMenuChoice(MenuItem *menu) {
       if (optionInput[strlen(optionInput) - 1] != '\n') {
          printf("Invalid, try again\n");
          readRestOfLine();
-         return NULL;
+         break;
       } else {
          /* convert user input to int */
          option = (int) strtol(optionInput, NULL, 10);
 
          /* check if option is valid */
          if (option == 0) {
-            printf("Invalid Option. Try again\n");
+            printf("Invalid, try again\n");
             break;
          } else {
             return menu[option - 1].function;
