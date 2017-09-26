@@ -1,6 +1,8 @@
 #include "vm_options.h"
 
 #define MAX_DATA_LENGTH 512
+#define ITEM_ID 5
+#define MAX_PRICE_LENGTH 4
 /**
  * vm_options.c this is where you need to implement the system handling
  * functions (e.g., init, free, load, save) and the main options for
@@ -345,7 +347,7 @@ void displayItems(VmSystem *system) {
  **/
 void purchaseItem(VmSystem *system) {
     Boolean itemFound = FALSE;
-    char itemIDInput[5 + EXTRA_SPACES];
+    char itemIDInput[ITEM_ID + EXTRA_SPACES];
     Node *currentItem;
 
     printf("Purchase Item\n");
@@ -386,7 +388,7 @@ void purchaseItem(VmSystem *system) {
 }
 
 void makePayment(VmSystem *system, Node *node) {
-    char priceInput[4 + EXTRA_SPACES];
+    char priceInput[MAX_PRICE_LENGTH + EXTRA_SPACES];
     unsigned price = 0;
     unsigned dollars = 0;
     unsigned cents = 0;
@@ -482,7 +484,7 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
     unsigned dollarChange = 0;
     unsigned centChange = 0;
 
-    char priceInput[4 + EXTRA_SPACES];
+    char priceInput[MAX_PRICE_LENGTH + EXTRA_SPACES];
 
 
     /* check if user enter enough money to purchase item */
