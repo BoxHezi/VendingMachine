@@ -359,6 +359,12 @@ void purchaseItem(VmSystem *system) {
 
         printf("Please enter the id of the item you want to purchase: ");
         fgets(itemIDInput, sizeof(itemIDInput), stdin);
+
+        if (strcmp(itemIDInput, "\n\0") == 0) {
+            printf("Returning to Main Menu...\n");
+            return;
+        }
+
         if (itemIDInput[strlen(itemIDInput) - 1] != '\n') {
             printf("Invalid input, try again\n");
             readRestOfLine();
@@ -387,12 +393,13 @@ void purchaseItem(VmSystem *system) {
     }
 }
 
-void makePayment(VmSystem *system, Node *node) {
+Boolean makePayment(VmSystem *system, Node *node) {
     char priceInput[MAX_PRICE_LENGTH + EXTRA_SPACES];
     unsigned price = 0;
     unsigned dollars = 0;
     unsigned cents = 0;
     Boolean priceValid = FALSE;
+    Boolean enoughAmount = FALSE;
 
     while (!priceValid) {
         printf("If you don't want purchase, please hit enter to cancel: ");
@@ -400,7 +407,7 @@ void makePayment(VmSystem *system, Node *node) {
 
         if (strcmp("\n\0", priceInput) == 0) {
             printf("Returning to menu...\n");
-            return;
+            return FALSE;
         }
 
         if (priceInput[strlen(priceInput) - 1] != '\n') {
@@ -421,8 +428,14 @@ void makePayment(VmSystem *system, Node *node) {
             }
         }
 
-        checkAmount(system, node, dollars, cents);
+        enoughAmount = checkAmount(system, node, dollars, cents);
+        if (!enoughAmount) {
+            printf("Returning to Main Menu...\n");
+            return enoughAmount;
+        }
     }
+
+    return enoughAmount;
 
 }
 
@@ -477,6 +490,7 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
     Boolean reachAmount = FALSE;
     unsigned price = 0;
 
+    /* use int, for centAmountDue might become negative */
     int dollarAmountDue = itemToPurchase->data->price.dollars;
     int centAmountDue = itemToPurchase->data->price.cents;
 
@@ -502,6 +516,11 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
 
             printf("You still need to give us $%d.%02d: ", dollarAmountDue, centAmountDue);
             fgets(priceInput, sizeof(priceInput), stdin);
+
+            if (strcmp(priceInput, "\n\0") == 0) {
+                return FALSE;
+            }
+
             if (priceInput[strlen(priceInput) - 1] != '\n') {
                 printf("Invalid, try again\n");
                 readRestOfLine();
@@ -532,10 +551,11 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
     dollarChange = change / 100;
     centChange = change % 100;
 
-    printf("Thank you, here is your %s, and your change of $%d.%02d\n", itemToPurchase->data->name,
+    printf("Thank you, here is your %s, and your change of $%d.%02d.\n", itemToPurchase->data->name,
            dollarChange, centChange);
+    printf("Please come back soon.\n");
 
-    return TRUE;
+    return reachAmount;
 }
 
 /**
