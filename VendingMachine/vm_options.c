@@ -200,7 +200,7 @@ void displayItems(VmSystem *system) {
    for (j = 0; j < system->itemList->size; j++) {
       tempSize = 0;
       tempAmount = current->data->onHand;
-      while ((double) tempAmount / 10 > 10) {
+      while ((double) tempAmount / 10 > 0) {
          if ((double) tempAmount / 10 < 1) {
             tempSize++;
             break;
@@ -300,6 +300,12 @@ void displayItems(VmSystem *system) {
          printSize++;
       }
 
+      /* while available become 0
+       * make sure the size is 1 instead of 0 */
+      if (tempAmount == 0) {
+         printSize = 1;
+      }
+
       while (printSize < onHandSize) {
          printf(" ");
          printSize++;
@@ -352,6 +358,7 @@ void displayItems(VmSystem *system) {
  * This function implements requirement 5 of the assignment specification.
  **/
 void purchaseItem(VmSystem *system) {
+   Boolean itemPurchase = FALSE;
    Boolean itemFound = FALSE;
    char itemIDInput[ITEM_ID + EXTRA_SPACES];
    Node *currentItem;
@@ -363,7 +370,7 @@ void purchaseItem(VmSystem *system) {
       /* reset the currentItem point to first item in the list */
       currentItem = system->itemList->head;
 
-      printf("Please enter the id of the item you want to purchase: ");
+      printf("Please enter the ID of the item you want to purchase: ");
       fgets(itemIDInput, sizeof(itemIDInput), stdin);
 
       /* if user hit enter only, bring user back to main menu */
@@ -380,14 +387,24 @@ void purchaseItem(VmSystem *system) {
          while (currentItem != NULL) {
             if (strcmp(itemIDInput, currentItem->data->id) == 0) {
                printf("Item Found\n");
+
+               if (currentItem->data->onHand == 0) {
+                  printf("Sorry no more %s\n", currentItem->data->name);
+               }
+
                printf("You have selected \"%s\t%s\". This wil be cost you $%d.%02d.\n", currentItem->data->name,
                       currentItem->data->desc, currentItem->data->price.dollars, currentItem->data->price.cents);
                printf("Please hand over the money - type in the value of each note/coin in cents.\n");
 
                printf("If you don't want purchase, please hit enter to cancel\n");
-               makePayment(system, currentItem);
+               itemPurchase = makePayment(system, currentItem);
+
+               if (itemPurchase) {
+                  currentItem->data->onHand--;
+               }
 
                itemFound = TRUE;
+               break;
             }
 
             currentItem = currentItem->next;
