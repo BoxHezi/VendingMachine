@@ -42,6 +42,6 @@ Boolean checkIncomeValidation(VmSystem *system, char *priceInString);
 
 Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, unsigned cents);
 
-void generateID(VmSystem *system);
+char * generateID(VmSystem *system, char nextID[ID_LEN]);
 
 #endif

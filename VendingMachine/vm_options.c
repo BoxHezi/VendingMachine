@@ -614,21 +614,32 @@ void saveAndExit(VmSystem *system) {
  * requirement 7 of of assignment specification.
  **/
 void addItem(VmSystem *system) {
-   generateID(system);
+   char nextName[NAME_LEN];
+   char nextDesc[DESC_LEN];
+
+   char nextID[ID_LEN];
+   strcpy(nextID, generateID(system, nextID));
+
+   printf("The new item will have the the Item id of %s.\n", nextID);
 }
 
-void generateID(VmSystem *system) {
+char * generateID(VmSystem *system, char nextID[ID_LEN]) {
    Node *idCheck = system->itemList->head;
 
+   /* calculate the largest ID in the list
+    * and calculate how many zero is needed
+    */
    char *largestID = NULL;
    char val;
    int tempVal;
    int nonValLen = 1;
 
+   /* calculate the what should the ID for
+    * the next item be
+    */
    int largestIDVal;
-   char nextID[ID_LEN];
    int nextIDVal = 0;
-   char nextIDValInString;
+   char nextIDValInString[1 + NULL_SPACE];
 
    int i = 0;
 
@@ -640,10 +651,8 @@ void generateID(VmSystem *system) {
    }
 
    for (i = 1; i < strlen(largestID); i++) {
-      printf("%c\n", largestID[i]);
       val = largestID[i];
       tempVal = (int) strtol(&val, NULL, 10);
-      printf("Val: %c\n", val);
       if (tempVal != 0) {
          break;
       }
@@ -654,10 +663,8 @@ void generateID(VmSystem *system) {
 
    largestID += nonValLen;
    largestIDVal = (int) strtol(largestID, NULL, 10);
-   printf("%d\n", largestIDVal);
 
    nextIDVal = largestIDVal + 1;
-   printf("%d\n", nextIDVal);
 
    if (nextIDVal == 10) {
       nonValLen--;
@@ -672,12 +679,13 @@ void generateID(VmSystem *system) {
       strcpy(&nextID[i], "0");
    }
 
-   /* while (idCheck->next != NULL) {
-      if (idCheck->data->id > idCheck->next->data->id) {
-         nextID = idCheck->data->id;
-      }
-      idCheck = idCheck->next;
-   } */
+   /* convert int to string */
+   sprintf(nextIDValInString, "%d", nextIDVal);
+
+   /* appending to string */
+   strcat(nextID, nextIDValInString);
+
+   return nextID;
 }
 
 /**
