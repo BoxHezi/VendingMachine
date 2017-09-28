@@ -619,10 +619,16 @@ void addItem(VmSystem *system) {
 
 void generateID(VmSystem *system) {
    Node *idCheck = system->itemList->head;
-   char *largestID;
-   int *largestIDVal;
-   char *nextID = "I";
-   int zeroLen = 0;
+
+   char *largestID = NULL;
+   char val;
+   int tempVal;
+   int nonValLen = 1;
+
+   int largestIDVal;
+   char nextID[ID_LEN];
+   int nextIDVal = 0;
+   char nextIDValInString;
 
    int i = 0;
 
@@ -633,14 +639,45 @@ void generateID(VmSystem *system) {
       idCheck = idCheck->next;
    }
 
+   for (i = 1; i < strlen(largestID); i++) {
+      printf("%c\n", largestID[i]);
+      val = largestID[i];
+      tempVal = (int) strtol(&val, NULL, 10);
+      printf("Val: %c\n", val);
+      if (tempVal != 0) {
+         break;
+      }
+      nonValLen++;
+   }
+
+   printf("%d\n", nonValLen);
+
+   largestID += nonValLen;
+   largestIDVal = (int) strtol(largestID, NULL, 10);
+   printf("%d\n", largestIDVal);
+
+   nextIDVal = largestIDVal + 1;
+   printf("%d\n", nextIDVal);
+
+   if (nextIDVal == 10) {
+      nonValLen--;
+   } else if (nextIDVal == 100) {
+      nonValLen -= 2;
+   } else if (nextIDVal == 1000) {
+      nonValLen -= 3;
+   }
+
+   strcpy(&nextID[0], "I");
+   for (i = 1; i < nonValLen; i++) {
+      strcpy(&nextID[i], "0");
+   }
+
    /* while (idCheck->next != NULL) {
       if (idCheck->data->id > idCheck->next->data->id) {
          nextID = idCheck->data->id;
       }
       idCheck = idCheck->next;
    } */
-
-   printf("%s\n", largestID);
 }
 
 /**
