@@ -70,6 +70,7 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
 
       createNode(stock, node);
       addToList(system->itemList, node);
+      sortList(system);
    }
 
    fclose(stockFile);
@@ -133,7 +134,11 @@ void displayItems(VmSystem *system) {
    unsigned totalPrintSize = 0;
    int i, j;
 
-   Node *current = system->itemList->head;
+   Node *current;
+
+   /*sortList(system);*/
+
+   current = system->itemList->head;
 
    /*
     * calculate size need for each section dynamically

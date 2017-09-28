@@ -19,4 +19,6 @@ void assignValueToStock(char *data, Stock *stock);
 
 Node *createNode(Stock *stock, Node *node);
 
+void sortList(VmSystem *system);
+
 #endif

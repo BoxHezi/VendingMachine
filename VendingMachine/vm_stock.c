@@ -91,3 +91,18 @@ void assignValueToStock(char *data, Stock *stock) {
    stock->price.cents = cents;
    stock->onHand = onHand;
 }
+
+void sortList(VmSystem *system) {
+   Node *currentItem = system->itemList->head;
+   Stock *tempData;
+
+   while (currentItem->next != NULL) {
+      if (strcmp(currentItem->data->name, currentItem->next->data->name) > 0) {
+         tempData = currentItem->data;
+         currentItem->data = currentItem->next->data;
+         currentItem->next->data = tempData;
+      }
+      currentItem = currentItem->next;
+   }
+
+}
