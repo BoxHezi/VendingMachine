@@ -1,7 +1,6 @@
 #include "vm_options.h"
 
 #define MAX_DATA_LENGTH 512
-#define ITEM_ID 5
 #define MAX_PRICE_LENGTH 4
 /**
  * vm_options.c this is where you need to implement the system handling
@@ -363,9 +362,9 @@ void displayItems(VmSystem *system) {
  * This function implements requirement 5 of the assignment specification.
  **/
 void purchaseItem(VmSystem *system) {
-   Boolean itemPurchase = FALSE;
+   Boolean itemPurchase;
    Boolean itemFound = FALSE;
-   char itemIDInput[ITEM_ID + EXTRA_SPACES];
+   char itemIDInput[ID_LEN + EXTRA_SPACES];
    Node *currentItem;
 
    printf("Purchase Item\n");
@@ -614,7 +613,35 @@ void saveAndExit(VmSystem *system) {
  * This option adds an item to the system. This function implements
  * requirement 7 of of assignment specification.
  **/
-void addItem(VmSystem *system) {}
+void addItem(VmSystem *system) {
+   generateID(system);
+}
+
+void generateID(VmSystem *system) {
+   Node *idCheck = system->itemList->head;
+   char *largestID;
+   int *largestIDVal;
+   char *nextID = "I";
+   int zeroLen = 0;
+
+   int i = 0;
+
+   while (idCheck->next != NULL) {
+      if (idCheck->data->id > idCheck->next->data->id) {
+         largestID = idCheck->data->id;
+      }
+      idCheck = idCheck->next;
+   }
+
+   /* while (idCheck->next != NULL) {
+      if (idCheck->data->id > idCheck->next->data->id) {
+         nextID = idCheck->data->id;
+      }
+      idCheck = idCheck->next;
+   } */
+
+   printf("%s\n", largestID);
+}
 
 /**
  * Remove an item from the system, including free'ing its memory.
