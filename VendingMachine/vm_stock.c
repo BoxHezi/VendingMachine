@@ -30,6 +30,7 @@ Node *createNode(Stock *stock, Node *node) {
    return node;
 }
 
+/* add item to the end of the list */
 void addToList(List *list, Node *node) {
    Node *tempNode = NULL;
 
@@ -54,6 +55,7 @@ void addToList(List *list, Node *node) {
    list->size++;
 }
 
+/* add item to the beginning of the list */
 void addToHead(List *list, Node *node) {
    Node *tempNode;
 

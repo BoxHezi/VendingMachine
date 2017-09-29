@@ -136,8 +136,6 @@ void displayItems(VmSystem *system) {
 
    Node *current;
 
-   /*sortList(system);*/
-
    current = system->itemList->head;
 
    /*
@@ -698,59 +696,40 @@ void addItem(VmSystem *system) {
 
 /* function to generate ID for next item */
 char * generateID(VmSystem *system, char nextID[ID_LEN]) {
-   Node *idCheck = system->itemList->head;
+   /* Node *idCheck = system->itemList->head; */
 
    /* calculate the largest ID in the list
     * and calculate how many zero is needed
     */
-   char *largestID = NULL;
+   /* char *largestID = NULL;
    char val;
-   int tempVal;
+   int tempVal; */
    int nonValLen = 1;
 
    /* calculate the what should the ID for
     * the next item be
     */
-   int largestIDVal;
-   int nextIDVal = 0;
+   int largestIDVal = system->itemList->size;
+   int nextIDVal = largestIDVal + 1;
    char nextIDValInString[1 + NULL_SPACE];
 
    int i = 0;
 
-   while (idCheck->next != NULL) {
-      if (idCheck->data->id > idCheck->next->data->id) {
-         largestID = idCheck->data->id;
-      }
-      idCheck = idCheck->next;
-   }
-
-   for (i = 1; i < strlen(largestID); i++) {
-      val = largestID[i];
-      tempVal = (int) strtol(&val, NULL, 10);
-      if (tempVal != 0) {
-         break;
-      }
-      nonValLen++;
-   }
-
-   printf("%d\n", nonValLen);
-
-   largestID += nonValLen;
-   largestIDVal = (int) strtol(largestID, NULL, 10);
-
-   nextIDVal = largestIDVal + 1;
-
    if (nextIDVal == 10) {
-      nonValLen--;
+      nonValLen = 3;
    } else if (nextIDVal == 100) {
-      nonValLen -= 2;
+      nonValLen = 2;
    } else if (nextIDVal == 1000) {
-      nonValLen -= 3;
+      nonValLen = 1;
+   } else {
+      nonValLen = 4;
    }
 
    strcpy(&nextID[0], "I");
-   for (i = 1; i < nonValLen; i++) {
-      strcpy(&nextID[i], "0");
+   nonValLen--;
+
+   for (i = 0; i < nonValLen; i++) {
+      strcat(nextID, "0");
    }
 
    /* convert int to string */
