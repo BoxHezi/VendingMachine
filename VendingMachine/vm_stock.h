@@ -21,4 +21,6 @@ Node *createNode(Stock *stock, Node *node);
 
 void sortList(VmSystem *system);
 
+void addToHead(List *list, Node *node);
+
 #endif

@@ -31,7 +31,7 @@ Node *createNode(Stock *stock, Node *node) {
 }
 
 void addToList(List *list, Node *node) {
-   Node *tempNode;
+   Node *tempNode = NULL;
 
    /* set node next to NULL avoid invalid pointer be added */
    node->next = NULL;
@@ -50,6 +50,16 @@ void addToList(List *list, Node *node) {
 
       }
    }
+
+   list->size++;
+}
+
+void addToHead(List *list, Node *node) {
+   Node *tempNode;
+
+   tempNode = list->head;
+   list->head = node;
+   node->next = tempNode;
 
    list->size++;
 }

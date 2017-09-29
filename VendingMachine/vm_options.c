@@ -2,6 +2,7 @@
 
 #define MAX_DATA_LENGTH 512
 #define MAX_PRICE_LENGTH 4
+#define ON_HAND_SIZE 3
 /**
  * vm_options.c this is where you need to implement the system handling
  * functions (e.g., init, free, load, save) and the main options for
@@ -69,8 +70,8 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
 
       createNode(stock, node);
       addToList(system->itemList, node);
-      sortList(system);
    }
+   sortList(system);
 
    fclose(stockFile);
    return TRUE;
@@ -614,15 +615,88 @@ void saveAndExit(VmSystem *system) {
  * requirement 7 of of assignment specification.
  **/
 void addItem(VmSystem *system) {
-   char nextName[NAME_LEN];
-   char nextDesc[DESC_LEN];
+   Node *newItem = malloc(sizeof(Node));
+   char nextName[NAME_LEN + EXTRA_SPACES];
+   char nextDesc[DESC_LEN + EXTRA_SPACES];
 
-   char nextID[ID_LEN];
+   /* +1 for the dot */
+   char nextPrice[MAX_PRICE_LENGTH + EXTRA_SPACES + 1];
+   unsigned nextDollar = 0;
+   unsigned nextCent = 0;
+
+   char nextID[ID_LEN + EXTRA_SPACES];
    strcpy(nextID, generateID(system, nextID));
+   nextID[strlen(nextID - 1) - 1] = '\0';
+   printf("%s\n", nextID);
 
    printf("The new item will have the the Item id of %s.\n", nextID);
+   while (TRUE) {
+      printf("Enter the item name: ");
+      fgets(nextName, sizeof(nextName), stdin);
+      if (strcmp("\n\0", nextName) == 0) {
+         printf("Returning to Main Menu...\n");
+         free(newItem);
+         return;
+      }
+
+      if (nextName[strlen(nextName) - 1] != '\n') {
+         printf("Invalid, try again\n");
+         readRestOfLine();
+      } else {
+         nextName[strlen(nextName) - 1] = '\0';
+         break;
+      }
+   }
+
+   while (TRUE) {
+      printf("Enter the item description: ");
+      fgets(nextDesc, sizeof(nextDesc), stdin);
+      if (strcmp("\n\0", nextDesc) == 0) {
+         printf("Returning to Main Menu...\n");
+         free(newItem);
+         return;
+      }
+
+      if (nextDesc[strlen(nextDesc) - 1] != '\n') {
+         printf("Invalid, try again\n");
+         readRestOfLine();
+      } else {
+         nextDesc[strlen(nextDesc) - 1] = '\0';
+         break;
+      }
+   }
+
+   while (TRUE) {
+      printf("Please enter price for this item: ");
+      fgets(nextPrice, sizeof(nextPrice), stdin);
+      if (strcmp("\n\0", nextPrice) == 0) {
+         printf("Returning to Main Menu...\n");
+         free(newItem);
+         return;
+      }
+
+      if (nextPrice[strlen(nextPrice) - 1] != '\n') {
+         printf("Invalid, try again\n");
+         readRestOfLine();
+      } else {
+         nextDollar = (unsigned) strtol(strtok(nextPrice, "."), NULL, 10);
+         nextCent = (unsigned) strtol(strtok(NULL, "."), NULL, 10);
+         break;
+      }
+   }
+
+   strcpy(newItem->data->id, nextID);
+   strcpy(newItem->data->name, nextName);
+   strcpy(newItem->data->desc, nextDesc);
+   newItem->data->price.dollars = nextDollar;
+   newItem->data->price.cents = nextCent;
+   newItem->data->onHand = DEFAULT_STOCK_LEVEL;
+
+   addToHead(system->itemList, newItem);
+   sortList(system);
 }
 
+/* function to generate ID for next item */
 char * generateID(VmSystem *system, char nextID[ID_LEN]) {
    Node *idCheck = system->itemList->head;
 
