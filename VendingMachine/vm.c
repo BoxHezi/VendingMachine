@@ -35,6 +35,8 @@ int main(int argc, char **argv) {
       }
    }
 
+   /* call save and exit function */
+   (*choice)(&vendingSystem);
    printf("Goodbye. \n\n");
 
    return EXIT_SUCCESS;

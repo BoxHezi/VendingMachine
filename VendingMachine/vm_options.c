@@ -2,7 +2,6 @@
 
 #define MAX_DATA_LENGTH 512
 #define MAX_PRICE_LENGTH 4
-#define ON_HAND_SIZE 3
 /**
  * vm_options.c this is where you need to implement the system handling
  * functions (e.g., init, free, load, save) and the main options for
@@ -101,6 +100,52 @@ Boolean loadCoins(VmSystem *system, const char *fileName) {
  * Saves all the stock back to the stock file.
  **/
 Boolean saveStock(VmSystem *system) {
+   FILE *fp;
+   Node *node = system->itemList->head;
+   char *itemID = NULL;
+   char *itemName = NULL;
+   char *itemDesc = NULL;
+   char itemPriceDollar[2 + NULL_SPACE];
+   char itemPriceCent[2 + NULL_SPACE];
+   char itemAvailable[2 + NULL_SPACE];
+   unsigned priceDollars;
+   unsigned priceCents;
+   unsigned onHand;
+
+   printf("Writing to file...\n");
+   fp = fopen("test.dat", "w");
+
+   while (node != NULL) {
+      itemID = node->data->id;
+      itemName = node->data->name;
+      itemDesc = node->data->desc;
+      priceDollars = node->data->price.dollars;
+      priceCents = node->data->price.cents;
+      onHand = node->data->onHand;
+
+      /* convert int to string */
+      sprintf(itemPriceDollar, "%d", priceDollars);
+      sprintf(itemPriceCent, "%02d", priceCents);
+      sprintf(itemAvailable, "%d", onHand);
+
+      fputs(itemID, fp);
+      fputs(STOCK_DELIM, fp);
+      fputs(itemName, fp);
+      fputs(STOCK_DELIM, fp);
+      fputs(itemDesc, fp);
+      fputs(STOCK_DELIM, fp);
+      fputs(itemPriceDollar, fp);
+      fputs(COIN_DELIM, fp);
+      fputs(itemPriceCent, fp);
+      fputs(STOCK_DELIM, fp);
+      fputs(itemAvailable, fp);
+      fputs("\n", fp);
+
+      node = node->next;
+   }
+
+   fclose(fp);
+
    return FALSE;
 }
 
@@ -260,8 +305,6 @@ void displayItems(VmSystem *system) {
       printSize++;
    }
 
-
-
    /* +9 for 4 vertical bars in the menu and spaces after and before | */
    totalPrintSize = idSize + nameSize + priceSize + onHandSize + 9;
    printf("\n");
@@ -269,7 +312,6 @@ void displayItems(VmSystem *system) {
       printf("-");
    }
    printf("\n");
-
 
    current = system->itemList->head;
    while (current != NULL) {
@@ -343,7 +385,6 @@ void displayItems(VmSystem *system) {
          printSize++;
       }
       printf("\n");
-
 
       current = current->next;
 
@@ -604,8 +645,6 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
 void saveAndExit(VmSystem *system) {
    saveStock(system);
    saveCoins(system);
-
-   exit(EXIT_SUCCESS);
 }
 
 /**
@@ -695,7 +734,7 @@ void addItem(VmSystem *system) {
 }
 
 /* function to generate ID for next item */
-char * generateID(VmSystem *system, char nextID[ID_LEN]) {
+char *generateID(VmSystem *system, char nextID[ID_LEN]) {
    /* Node *idCheck = system->itemList->head; */
 
    /* calculate the largest ID in the list
