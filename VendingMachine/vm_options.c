@@ -128,6 +128,7 @@ Boolean saveStock(VmSystem *system) {
       sprintf(itemPriceCent, "%02d", priceCents);
       sprintf(itemAvailable, "%d", onHand);
 
+      /* write to file */
       fputs(itemID, fp);
       fputs(STOCK_DELIM, fp);
       fputs(itemName, fp);
@@ -135,7 +136,7 @@ Boolean saveStock(VmSystem *system) {
       fputs(itemDesc, fp);
       fputs(STOCK_DELIM, fp);
       fputs(itemPriceDollar, fp);
-      fputs(COIN_DELIM, fp);
+      fputs(".", fp);
       fputs(itemPriceCent, fp);
       fputs(STOCK_DELIM, fp);
       fputs(itemAvailable, fp);
@@ -146,7 +147,7 @@ Boolean saveStock(VmSystem *system) {
 
    fclose(fp);
 
-   return FALSE;
+   return TRUE;
 }
 
 /**
@@ -490,7 +491,7 @@ Boolean makePayment(VmSystem *system, Node *node) {
          dollars = price / 100;
          cents = price % 100;
 
-         if (!checkIncomeValidation(system, priceInput)) {
+         if (!checkIncomeValidation(priceInput)) {
             printf("Error: $%d.%02d is not a valid denomination of money\n", dollars, cents);
             continue;
          } else {
@@ -510,50 +511,15 @@ Boolean makePayment(VmSystem *system, Node *node) {
 }
 
 /* function to check correct denomination of coins input */
-Boolean checkIncomeValidation(VmSystem *system, char *priceInString) {
-   Boolean validIncome = FALSE;
+Boolean checkIncomeValidation(char priceInString[]) {
    unsigned price = 0;
-   int i;
 
    price = (unsigned) strtol(priceInString, NULL, 10);
-   switch (price) {
-      case 5:
-         price = FIVE_CENTS;
-         break;
-      case 10:
-         price = TEN_CENTS;
-         break;
-      case 20:
-         price = TWENTY_CENTS;
-         break;
-      case 50:
-         price = FIFTY_CENTS;
-         break;
-      case 100:
-         price = ONE_DOLLAR;
-         break;
-      case 200:
-         price = TWO_DOLLARS;
-         break;
-      case 500:
-         price = FIVE_DOLLARS;
-         break;
-      case 1000:
-         price = TEN_DOLLARS;
-         break;
-      default:
-         validIncome = FALSE;
-         break;
+   if (price == 5 || price == 10 || price == 20 || price == 50 || price == 100 || price == 200 || price == 500 || price == 1000) {
+      return TRUE;
+   } else {
+      return FALSE;
    }
-
-   for (i = 0; i < NUM_DENOMS; i++) {
-      if (price == system->cashRegister[i].denom) {
-         validIncome = TRUE;
-         break;
-      }
-   }
-
-   return validIncome;
 }
 
 Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, unsigned cents) {
@@ -607,7 +573,7 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
             dollars = price / 100;
             cents = price % 100;
 
-            if (!checkIncomeValidation(system, priceInput)) {
+            if (!checkIncomeValidation(priceInput)) {
                printf("Error: $%d.%02d is not a valid denomination of money\n", dollars, cents);
 
                /* avoid decrease of dollarAmountDue if some invalid amount is input */

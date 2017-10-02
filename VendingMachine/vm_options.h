@@ -38,7 +38,7 @@ void abortProgram(VmSystem *system);
 
 Boolean makePayment(VmSystem *system, Node *node);
 
-Boolean checkIncomeValidation(VmSystem *system, char *priceInString);
+Boolean checkIncomeValidation(char *priceInString);
 
 Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, unsigned cents);
 
