@@ -442,7 +442,7 @@ void purchaseItem(VmSystem *system) {
                printf("Please hand over the money - type in the value of each note/coin in cents.\n");
 
                printf("If you don't want purchase, please hit enter to cancel\n");
-               itemPurchase = makePayment(system, currentItem);
+               itemPurchase = makePayment(currentItem);
 
                if (itemPurchase) {
                   currentItem->data->onHand--;
@@ -463,7 +463,7 @@ void purchaseItem(VmSystem *system) {
    }
 }
 
-Boolean makePayment(VmSystem *system, Node *node) {
+Boolean makePayment(Node *node) {
    char priceInput[MAX_PRICE_LENGTH + EXTRA_SPACES];
    unsigned price = 0;
    unsigned dollars = 0;
@@ -499,7 +499,7 @@ Boolean makePayment(VmSystem *system, Node *node) {
          }
       }
 
-      enoughAmount = checkAmount(system, node, dollars, cents);
+      enoughAmount = checkAmount(node, dollars, cents);
       if (!enoughAmount) {
          printf("Returning to Main Menu...\n");
          return enoughAmount;
@@ -515,15 +515,18 @@ Boolean checkIncomeValidation(char priceInString[]) {
    unsigned price = 0;
 
    price = (unsigned) strtol(priceInString, NULL, 10);
-   if (price == 5 || price == 10 || price == 20 || price == 50 || price == 100 || price == 200 || price == 500 || price == 1000) {
+   if (price == 5 || price == 10 || price == 20 || price == 50 ||
+       price == 100 || price == 200 || price == 500 || price == 1000) {
       return TRUE;
    } else {
       return FALSE;
    }
 }
 
-Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, unsigned cents) {
+Boolean checkAmount(Node *itemToPurchase, unsigned dollars, unsigned cents) {
    Boolean reachAmount = FALSE;
+
+   /* amount of money user input */
    unsigned price = dollars * 100 + cents;
 
    /* use int, for centAmountDue might become negative */
@@ -544,7 +547,13 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
          dollarAmountDue = dollarAmountDue - dollars;
          centAmountDue = centAmountDue - cents;
 
-         if (centAmountDue == 0 && dollarAmountDue == 0) {
+         if (centAmountDue <= 0 && dollarAmountDue <= 0) {
+            /* set price to 0 as centAmountDue is negative
+             * change is calculated by using
+             * user input minus amount of money due
+             * i.e. price - (dollarAmountDue * 100 + centAmountDue)
+             * set price to 0 as price minus a negative number will
+             * become positive */
             price = 0;
             break;
          }
@@ -594,6 +603,7 @@ Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, un
    change = price - (dollarAmountDue * 100 + centAmountDue);
    dollarChange = change / 100;
    centChange = change % 100;
+
 
    printf("Thank you, here is your %s, and your change of $%d.%02d.\n",
           itemToPurchase->data->name,

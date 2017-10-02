@@ -36,11 +36,11 @@ void resetCoins(VmSystem *system);
 
 void abortProgram(VmSystem *system);
 
-Boolean makePayment(VmSystem *system, Node *node);
+Boolean makePayment(Node *node);
 
 Boolean checkIncomeValidation(char *priceInString);
 
-Boolean checkAmount(VmSystem *system, Node *itemToPurchase, unsigned dollars, unsigned cents);
+Boolean checkAmount(Node *itemToPurchase, unsigned dollars, unsigned cents);
 
 char * generateID(VmSystem *system, char nextID[ID_LEN]);
 
