@@ -55,17 +55,6 @@ void addToList(List *list, Node *node) {
    list->size++;
 }
 
-/* add item to the beginning of the list */
-void addToHead(List *list, Node *node) {
-   Node *tempNode;
-
-   tempNode = list->head;
-   list->head = node;
-   node->next = tempNode;
-
-   list->size++;
-}
-
 void assignValueToStock(char *data, Stock *stock) {
    /* get stock data from each line */
    char *id;
@@ -105,16 +94,41 @@ void assignValueToStock(char *data, Stock *stock) {
 }
 
 void sortList(VmSystem *system) {
-   Node *currentItem = system->itemList->head;
+   Node *currentItem;
    Stock *tempData;
+   int i = 0;
 
-   while (currentItem->next != NULL) {
-      if (strcmp(currentItem->data->name, currentItem->next->data->name) > 0) {
-         tempData = currentItem->data;
-         currentItem->data = currentItem->next->data;
-         currentItem->next->data = tempData;
+   for (i = 0; i < system->itemList->size; i++) {
+      currentItem = system->itemList->head;
+      while (currentItem->next != NULL) {
+         if (strcmp(currentItem->data->name, currentItem->next->data->name) > 0) {
+            tempData = currentItem->data;
+            currentItem->data = currentItem->next->data;
+            currentItem->next->data = tempData;
+         }
+         currentItem = currentItem->next;
       }
-      currentItem = currentItem->next;
    }
 
+}
+
+void sortListByID(VmSystem *system) {
+   Node *currentItem;
+   Stock *tempData;
+   int i = 0;
+
+   /* nested loop to make sure that item is sorted in correct order
+    * if C,B,A is read, no nested loop will sort the list to B,A,C
+    * by using nested loop, it will be sorted in A,B,C */
+   for (i = 0; i < system->itemList->size; i++) {
+      currentItem = system->itemList->head;
+      while (currentItem->next != NULL) {
+         if (strcmp(currentItem->data->id, currentItem->next->data->id) > 0) {
+            tempData = currentItem->data;
+            currentItem->data = currentItem->next->data;
+            currentItem->next->data = tempData;
+         }
+         currentItem = currentItem->next;
+      }
+   }
 }

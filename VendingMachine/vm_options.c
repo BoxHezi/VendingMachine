@@ -112,6 +112,8 @@ Boolean saveStock(VmSystem *system) {
    unsigned priceCents;
    unsigned onHand;
 
+   sortListByID(system);
+
    printf("Writing to file...\n");
    fp = fopen("test.dat", "w");
 
@@ -705,8 +707,12 @@ void addItem(VmSystem *system) {
    newItem->data->price.cents = nextCent;
    newItem->data->onHand = DEFAULT_STOCK_LEVEL;
 
-   addToHead(system->itemList, newItem);
+   printf("This item \"%s - %s.\" has now been added to the menu\n",
+          newItem->data->name, newItem->data->desc);
+
+   addToList(system->itemList, newItem);
    sortList(system);
+
 }
 
 /* function to generate ID for next item */
