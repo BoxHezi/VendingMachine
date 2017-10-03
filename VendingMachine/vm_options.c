@@ -439,9 +439,11 @@ void purchaseItem(VmSystem *system) {
                   printf("Sorry no more %s\n", currentItem->data->name);
                }
 
-               printf("You have selected \"%s\t%s\". This wil be cost you $%d.%02d.\n", currentItem->data->name,
-                      currentItem->data->desc, currentItem->data->price.dollars, currentItem->data->price.cents);
-               printf("Please hand over the money - type in the value of each note/coin in cents.\n");
+               printf("You have selected \"%s\t%s\". This wil be cost you $%d.%02d.\n",
+                      currentItem->data->name, currentItem->data->desc,
+                      currentItem->data->price.dollars, currentItem->data->price.cents);
+               printf("Please hand over the money - "
+                            "type in the value of each note/coin in cents.\n");
 
                printf("If you don't want purchase, please hit enter to cancel\n");
                itemPurchase = makePayment(currentItem);
@@ -517,6 +519,7 @@ Boolean checkIncomeValidation(char priceInString[]) {
    unsigned price = 0;
 
    price = (unsigned) strtol(priceInString, NULL, 10);
+   /* hard coded valid denomination */
    if (price == 5 || price == 10 || price == 20 || price == 50 ||
        price == 100 || price == 200 || price == 500 || price == 1000) {
       return TRUE;
@@ -717,14 +720,7 @@ void addItem(VmSystem *system) {
 
 /* function to generate ID for next item */
 char *generateID(VmSystem *system, char nextID[ID_LEN]) {
-   /* Node *idCheck = system->itemList->head; */
-
-   /* calculate the largest ID in the list
-    * and calculate how many zero is needed
-    */
-   /* char *largestID = NULL;
-   char val;
-   int tempVal; */
+   /* length of I and zeros */
    int nonValLen = 1;
 
    /* calculate the what should the ID for
@@ -736,6 +732,7 @@ char *generateID(VmSystem *system, char nextID[ID_LEN]) {
 
    int i = 0;
 
+   /* update how many 0 are needed */
    if (nextIDVal == 10) {
       nonValLen = 3;
    } else if (nextIDVal == 100) {
@@ -817,7 +814,6 @@ void removeItem(VmSystem *system) {
 
    free(itemToDel);
    system->itemList->size--;
-
 }
 
 /**
