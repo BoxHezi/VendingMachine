@@ -766,7 +766,59 @@ char *generateID(VmSystem *system, char nextID[ID_LEN]) {
  * Remove an item from the system, including free'ing its memory.
  * This function implements requirement 8 of the assignment specification.
  **/
-void removeItem(VmSystem *system) {}
+void removeItem(VmSystem *system) {
+   Node *itemToDel = NULL;
+   Node *currentItem = NULL;
+   char idInput[ID_LEN + EXTRA_SPACES];
+   Boolean itemFound = FALSE;
+
+   while (!itemFound) {
+      currentItem = system->itemList->head;
+      printf("Enter the item id of the item to remove from the menu: ");
+      fgets(idInput, sizeof(idInput), stdin);
+      if (strcmp(idInput, "\n\0") == 0) {
+         printf("Returning to main menu...\n");
+         return;
+      }
+
+      if (idInput[strlen(idInput) - 1] != '\n') {
+         printf("Invalid, try again!\n");
+         readRestOfLine();
+      } else {
+         idInput[strlen(idInput) - 1] = '\0';
+
+         while (currentItem != NULL) {
+            if (strcmp(currentItem->data->id, idInput) == 0) {
+               itemToDel = currentItem;
+               itemFound = TRUE;
+               break;
+            }
+
+            currentItem = currentItem->next;
+         }
+
+         if (!itemFound) {
+            printf("No such item found!\n");
+         }
+      }
+   }
+
+   currentItem = system->itemList->head;
+   while (currentItem != NULL) {
+      if (currentItem->next == itemToDel) {
+         currentItem->next = itemToDel->next;
+         break;
+      }
+      currentItem = currentItem->next;
+   }
+
+   printf("\"%s - %s %s\" has now been removed from the system.\n",
+          itemToDel->data->id, itemToDel->data->name, itemToDel->data->desc);
+
+   free(itemToDel);
+   system->itemList->size--;
+
+}
 
 /**
  * This option will require you to display the coins from lowest to highest
