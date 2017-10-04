@@ -136,16 +136,39 @@ void sortListByID(VmSystem *system) {
 /* when take out item form middle of the system
  * shift id after the item been removed by 1 */
 void reassignID(VmSystem *system) {
-   int idVal;
-   int nonValSize = 4;
-   int sizeItemList = system->itemList->size;
+   int idVal = 0;
+   int nonValSize = 0;
    Node *currentItem = system->itemList->head;
    char newID[ID_LEN + NULL_SPACE];
+   char idValInString[1 + NULL_SPACE];
 
    sortListByID(system);
 
    while (currentItem != NULL) {
       idVal++;
+      strcpy(newID, "I");
+
+      /* nonValSize stand for number of zero after I
+       * and before the first non-zero number */
+      nonValSize = 3;
+
+      if (idVal >= 10 && idVal < 100) {
+         nonValSize = 2;
+      } else if (idVal >= 100 && idVal < 1000) {
+         nonValSize = 1;
+      } else if (idVal > 1000) {
+         nonValSize = 0;
+      }
+
+      while (nonValSize > 0) {
+         strcat(newID, "0");
+         nonValSize--;
+      }
+
+      sprintf(idValInString, "%d", idVal);
+      strcat(newID, idValInString);
+
+      strcpy(currentItem->data->id, newID);
 
       currentItem = currentItem->next;
    }

@@ -14,6 +14,7 @@
  * defined in vm_system.h.
  **/
 Boolean systemInit(VmSystem *system) {
+
    system->itemList = initList();
    initCoins(system->cashRegister);
    system->stockFileName = NULL;
@@ -49,6 +50,8 @@ Boolean loadData(
  **/
 Boolean loadStock(VmSystem *system, const char *fileName) {
    char data[MAX_DATA_LENGTH];
+   Node *node;
+   Stock *stock;
 
    /* load stock file */
    FILE *stockFile;
@@ -63,8 +66,8 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
 
    /* while the file has next line */
    while (fgets(data, sizeof(data), stockFile) != NULL) {
-      Node *node = malloc(sizeof(Node));
-      Stock *stock = malloc(sizeof(Stock));
+      node = malloc(sizeof(Node));
+      stock = malloc(sizeof(Stock));
       assignValueToStock(data, stock);
 
       createNode(stock, node);
@@ -580,7 +583,11 @@ void addItem(VmSystem *system) {
       } else {
          nextDollar = (unsigned) strtol(strtok(nextPrice, "."), NULL, 10);
          nextCent = (unsigned) strtol(strtok(NULL, "."), NULL, 10);
-         break;
+         if (nextCent % 5 != 0) {
+            printf("Invalid cents!\n");
+         } else {
+            break;
+         }
       }
    }
 
@@ -695,6 +702,8 @@ void removeItem(VmSystem *system) {
 
    free(itemToDel);
    system->itemList->size--;
+   reassignID(system);
+   sortList(system);
 }
 
 /**
