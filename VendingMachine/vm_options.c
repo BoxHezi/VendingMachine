@@ -262,8 +262,8 @@ void displayItems(VmSystem *system) {
    current = system->itemList->head;
    while (current != NULL) {
 
-      printf("%s | %-*s | %-*d | $%d.%02d\n", current->data->id, nameSize, current->data->name,
-             onHandSize, current->data->onHand,
+      printf("%s | %-*s | %-*d | $%d.%02d\n", current->data->id, nameSize,
+             current->data->name, onHandSize, current->data->onHand,
              current->data->price.dollars, current->data->price.cents);
 
       current = current->next;
@@ -284,6 +284,7 @@ void displayItems(VmSystem *system) {
 void purchaseItem(VmSystem *system) {
    Boolean itemPurchase;
    Boolean itemFound = FALSE;
+   Boolean available = TRUE;
    char itemIDInput[ID_LEN + EXTRA_SPACES];
    Node *currentItem;
 
@@ -314,6 +315,8 @@ void purchaseItem(VmSystem *system) {
 
                if (currentItem->data->onHand == 0) {
                   printf("Sorry no more %s\n", currentItem->data->name);
+                  available = FALSE;
+                  break;
                }
 
                printf("You have selected \"%s\t%s\". This wil be cost you $%d.%02d.\n",
@@ -335,10 +338,11 @@ void purchaseItem(VmSystem *system) {
 
             currentItem = currentItem->next;
          }
-         if (!itemFound) {
+
+         if (!available) {
+            continue;
+         } else if (!itemFound) {
             printf("Item Not Found\n");
-         } else {
-            break;
          }
       }
    }
