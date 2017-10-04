@@ -167,8 +167,6 @@ void displayItems(VmSystem *system) {
    unsigned idSize = 0;
    unsigned nameSize = 0;
    unsigned priceSize = 0;
-   unsigned dollarSize = 0;
-   unsigned centSize = 0;
    unsigned onHandSize = 0;
 
    /* tempAmount is used to calculate length of int
@@ -210,107 +208,52 @@ void displayItems(VmSystem *system) {
 
    current = system->itemList->head;
    for (j = 0; j < system->itemList->size; j++) {
-      tempSize = 0;
-      tempAmount = current->data->price.dollars;
-      while ((double) tempAmount / 10 > 0) {
-         if ((double) tempAmount / 10 < 1) {
-            tempSize++;
-            break;
-         }
-         tempAmount /= 10;
-         tempSize++;
-      }
-      if (dollarSize < tempSize) {
-         dollarSize = tempSize;
+      tempAmount = current->data->price.dollars * 100
+                   + current->data->price.cents;
+      tempSize = getNumberLength((tempAmount));
+      if (priceSize < tempSize) {
+         priceSize = tempSize;
       }
       current = current->next;
    }
-   priceSize = dollarSize;
+   /* +2 for the dot and dollar sign */
+   priceSize += 2;
 
    current = system->itemList->head;
    for (j = 0; j < system->itemList->size; j++) {
-      tempSize = 0;
-      tempAmount = current->data->price.cents;
-      while ((double) tempAmount / 10 > 0) {
-         if ((double) tempAmount / 10 < 1) {
-            tempSize++;
-            break;
-         }
-         tempAmount /= 10;
-         tempSize++;
-      }
-      if (centSize < tempSize) {
-         centSize = tempSize;
-      }
-      current = current->next;
-   }
-   /* +2 for the dot and $ sign */
-   priceSize += centSize + 2;
-
-   current = system->itemList->head;
-   for (j = 0; j < system->itemList->size; j++) {
-      tempSize = 0;
       tempAmount = current->data->onHand;
-      while ((double) tempAmount / 10 > 0) {
-         if ((double) tempAmount / 10 < 1) {
-            tempSize++;
-            break;
-         }
-         tempAmount /= 10;
-         tempSize++;
-      }
+      tempSize = getNumberLength((tempAmount));
       if (onHandSize < tempSize) {
          onHandSize = tempSize;
       }
       current = current->next;
    }
 
-   printf("ID");
+   printf("%-5s | %-*s | Available | Price\n", "ID", nameSize, "Name");
+
+   /* update each size to make print out vertical alignment */
    printSize = (unsigned) strlen("ID");
    if (idSize < printSize) {
       idSize = printSize;
    }
-   while (printSize < idSize) {
-      printf(" ");
-      printSize++;
-   }
-   printf(" | ");
 
-   printf("Name");
    printSize = (unsigned) strlen("Name");
    if (nameSize < printSize) {
       nameSize = printSize;
    }
-   while (printSize < nameSize) {
-      printf(" ");
-      printSize++;
-   }
-   printf(" | ");
 
-   printf("Available");
    printSize = (unsigned) strlen("Available");
    if (onHandSize < printSize) {
       onHandSize = printSize;
    }
-   while (printSize < onHandSize) {
-      printf(" ");
-      printSize++;
-   }
-   printf(" | ");
 
-   printf("Price");
    printSize = (unsigned) strlen("Price");
    if (priceSize < printSize) {
       priceSize = printSize;
    }
-   while (printSize < priceSize) {
-      printf(" ");
-      printSize++;
-   }
 
    /* +9 for 4 vertical bars in the menu and spaces after and before | */
    totalPrintSize = idSize + nameSize + priceSize + onHandSize + 9;
-   printf("\n");
    for (i = 0; i < totalPrintSize; i++) {
       printf("-");
    }
@@ -319,75 +262,9 @@ void displayItems(VmSystem *system) {
    current = system->itemList->head;
    while (current != NULL) {
 
-      printf("%s", current->data->id);
-      printSize = (unsigned) strlen(current->data->id);
-      /* print vertical alignment */
-      while (printSize < idSize) {
-         printf(" ");
-         printSize++;
-      }
-      printf(" | ");
-
-      printf("%s", current->data->name);
-      printSize = (unsigned) strlen(current->data->name);
-      while (printSize < nameSize) {
-         printf(" ");
-         printSize++;
-      }
-      printf(" | ");
-
-      printf("%d", current->data->onHand);
-      printSize = 0;
-      tempAmount = current->data->onHand;
-      while ((double) tempAmount / 10 > 0) {
-         if ((double) tempAmount / 10 < 1) {
-            printSize++;
-            break;
-         }
-         tempAmount /= 10;
-         printSize++;
-      }
-
-      /* while available become 0
-       * make sure the size is 1 instead of 0 */
-      if (tempAmount == 0) {
-         printSize = 1;
-      }
-
-      while (printSize < onHandSize) {
-         printf(" ");
-         printSize++;
-      }
-      printf(" | ");
-
-      printf("$%d.%02d", current->data->price.dollars, current->data->price.cents);
-      printSize = 0;
-      tempAmount = current->data->price.dollars;
-      while ((double) tempAmount / 10 > 0) {
-         if ((double) tempAmount / 10 < 1) {
-            printSize++;
-            break;
-         }
-         tempAmount /= 10;
-         printSize++;
-      }
-      priceSize = printSize;
-      tempAmount = current->data->price.cents;
-      while ((double) tempAmount / 10 > 0) {
-         if ((double) tempAmount / 10 < 1) {
-            printSize++;
-            break;
-         }
-         tempAmount /= 10;
-         printSize++;
-      }
-      centSize = printSize;
-      printSize = priceSize + centSize + 2;
-      while (printSize < priceSize) {
-         printf(" ");
-         printSize++;
-      }
-      printf("\n");
+      printf("%s | %-*s | %-*d | $%d.%02d\n", current->data->id, nameSize, current->data->name,
+             onHandSize, current->data->onHand,
+             current->data->price.dollars, current->data->price.cents);
 
       current = current->next;
 
@@ -733,11 +610,11 @@ char *generateID(VmSystem *system, char nextID[ID_LEN]) {
    int i = 0;
 
    /* update how many 0 are needed */
-   if (nextIDVal == 10) {
+   if (nextIDVal >= 10 && nextIDVal < 100) {
       nonValLen = 3;
-   } else if (nextIDVal == 100) {
+   } else if (nextIDVal >= 100 && nextIDVal < 1000) {
       nonValLen = 2;
-   } else if (nextIDVal == 1000) {
+   } else if (nextIDVal > 1000) {
       nonValLen = 1;
    } else {
       nonValLen = 4;

@@ -98,6 +98,9 @@ void sortList(VmSystem *system) {
    Stock *tempData;
    int i = 0;
 
+   /* nested loop to make sure that item is sorted in correct order
+    * if C,B,A is read, no nested loop will sort the list to B,A,C
+    * by using nested loop, it will be sorted in A,B,C */
    for (i = 0; i < system->itemList->size; i++) {
       currentItem = system->itemList->head;
       while (currentItem->next != NULL) {
@@ -117,9 +120,6 @@ void sortListByID(VmSystem *system) {
    Stock *tempData;
    int i = 0;
 
-   /* nested loop to make sure that item is sorted in correct order
-    * if C,B,A is read, no nested loop will sort the list to B,A,C
-    * by using nested loop, it will be sorted in A,B,C */
    for (i = 0; i < system->itemList->size; i++) {
       currentItem = system->itemList->head;
       while (currentItem->next != NULL) {
@@ -130,5 +130,23 @@ void sortListByID(VmSystem *system) {
          }
          currentItem = currentItem->next;
       }
+   }
+}
+
+/* when take out item form middle of the system
+ * shift id after the item been removed by 1 */
+void reassignID(VmSystem *system) {
+   int idVal;
+   int nonValSize = 4;
+   int sizeItemList = system->itemList->size;
+   Node *currentItem = system->itemList->head;
+   char newID[ID_LEN + NULL_SPACE];
+
+   sortListByID(system);
+
+   while (currentItem != NULL) {
+      idVal++;
+
+      currentItem = currentItem->next;
    }
 }

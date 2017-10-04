@@ -23,4 +23,6 @@ void sortList(VmSystem *system);
 
 void sortListByID(VmSystem *system);
 
+void reassignID(VmSystem *system);
+
 #endif

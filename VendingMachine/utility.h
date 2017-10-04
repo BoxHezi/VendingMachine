@@ -29,4 +29,6 @@ typedef enum boolean {
  **/
 void readRestOfLine();
 
+unsigned getNumberLength(unsigned len);
+
 #endif
