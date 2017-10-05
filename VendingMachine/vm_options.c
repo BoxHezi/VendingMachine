@@ -104,7 +104,7 @@ Boolean loadCoins(VmSystem *system, const char *fileName) {
  **/
 Boolean saveStock(VmSystem *system) {
    FILE *fp;
-   Node *node = system->itemList->head;
+   Node *node;
    char *itemID = NULL;
    char *itemName = NULL;
    char *itemDesc = NULL;
@@ -119,6 +119,8 @@ Boolean saveStock(VmSystem *system) {
 
    printf("Writing to file...\n");
    fp = fopen("test.dat", "w");
+
+   node = system->itemList->head;
 
    while (node != NULL) {
       itemID = node->data->id;
@@ -151,7 +153,6 @@ Boolean saveStock(VmSystem *system) {
    }
 
    fclose(fp);
-
    return TRUE;
 }
 
@@ -517,7 +518,8 @@ void saveAndExit(VmSystem *system) {
  * requirement 7 of of assignment specification.
  **/
 void addItem(VmSystem *system) {
-   Node *newItem = malloc(sizeof(Node));
+   Stock *newItem = malloc(sizeof(Stock));
+   Node *newNode = malloc(sizeof(Node));
    char nextName[NAME_LEN + EXTRA_SPACES];
    char nextDesc[DESC_LEN + EXTRA_SPACES];
 
@@ -526,10 +528,8 @@ void addItem(VmSystem *system) {
    unsigned nextDollar = 0;
    unsigned nextCent = 0;
 
-   char nextID[ID_LEN + EXTRA_SPACES];
-   strcpy(nextID, generateID(system, nextID));
-   nextID[strlen(nextID - 1) - 1] = '\0';
-   printf("%s\n", nextID);
+   char nextID[ID_LEN + NULL_SPACE];
+   generateID(system, nextID);
 
    printf("The new item will have the the Item id of %s.\n", nextID);
    while (TRUE) {
@@ -591,23 +591,23 @@ void addItem(VmSystem *system) {
       }
    }
 
-   strcpy(newItem->data->id, nextID);
-   strcpy(newItem->data->name, nextName);
-   strcpy(newItem->data->desc, nextDesc);
-   newItem->data->price.dollars = nextDollar;
-   newItem->data->price.cents = nextCent;
-   newItem->data->onHand = DEFAULT_STOCK_LEVEL;
+   strcpy(newItem->id, nextID);
+   strcpy(newItem->name, nextName);
+   strcpy(newItem->desc, nextDesc);
+   newItem->price.dollars = nextDollar;
+   newItem->price.cents = nextCent;
+   newItem->onHand = DEFAULT_STOCK_LEVEL;
 
    printf("This item \"%s - %s.\" has now been added to the menu\n",
-          newItem->data->name, newItem->data->desc);
+          newItem->name, newItem->desc);
 
-   addToList(system->itemList, newItem);
+   createNode(newItem, newNode);
+   addToList(system->itemList, newNode);
    sortList(system);
-
 }
 
 /* function to generate ID for next item */
-char *generateID(VmSystem *system, char nextID[ID_LEN]) {
+char *generateID(VmSystem *system, char nextID[]) {
    /* length of I and zeros */
    int nonValLen = 1;
 
