@@ -29,6 +29,17 @@ Boolean systemInit(VmSystem *system) {
  * and run it through valgrind.
  **/
 void systemFree(VmSystem *system) {
+   Node *current = system->itemList->head;
+   Node *previous = NULL;
+
+   while (current != NULL) {
+      previous = current;
+      current = current->next;
+      free(previous->data);
+      free(previous);
+   }
+
+
    free(system->itemList);
 }
 
@@ -153,6 +164,7 @@ Boolean saveStock(VmSystem *system) {
    }
 
    fclose(fp);
+   systemFree(system);
    return TRUE;
 }
 
@@ -235,7 +247,7 @@ void displayItems(VmSystem *system) {
 
    printf("%-5s | %-*s | Available | Price\n", "ID", nameSize, "Name");
 
-   /* update each size to make print out vertical alignment */
+   /* update each size to make print out vertically alignment */
    printSize = (unsigned) strlen("ID");
    if (idSize < printSize) {
       idSize = printSize;
@@ -266,7 +278,7 @@ void displayItems(VmSystem *system) {
    current = system->itemList->head;
    while (current != NULL) {
 
-      printf("%s | %-*s | %-*d | $%d.%02d\n", current->data->id, nameSize,
+      printf("%-5s | %-*s | %-*d | $%d.%02d\n", current->data->id, nameSize,
              current->data->name, onHandSize, current->data->onHand,
              current->data->price.dollars, current->data->price.cents);
 
@@ -522,6 +534,7 @@ void addItem(VmSystem *system) {
    Node *newNode = malloc(sizeof(Node));
    char nextName[NAME_LEN + EXTRA_SPACES];
    char nextDesc[DESC_LEN + EXTRA_SPACES];
+   char *priceSeparator = ".";
 
    /* +1 for the dot */
    char nextPrice[MAX_PRICE_LENGTH + EXTRA_SPACES + 1];
@@ -581,8 +594,15 @@ void addItem(VmSystem *system) {
          printf("Invalid, try again\n");
          readRestOfLine();
       } else {
-         nextDollar = (unsigned) strtol(strtok(nextPrice, "."), NULL, 10);
-         nextCent = (unsigned) strtol(strtok(NULL, "."), NULL, 10);
+         nextPrice[strlen(nextPrice) - 1] = '\0';
+         if (nextPrice[strlen(nextPrice) - 3] != *priceSeparator) {
+            printf("Error, please enter a dot to separate dollar and cent\n");
+            continue;
+         }
+
+         nextDollar = (unsigned) strtol(strtok(nextPrice, priceSeparator), NULL, 10);
+         nextCent = (unsigned) strtol(strtok(NULL, priceSeparator), NULL, 10);
+
          if (nextCent % 5 != 0) {
             printf("Invalid cents!\n");
          } else {
@@ -720,7 +740,16 @@ void displayCoins(VmSystem *system) {}
  * the startup code.
  * This function implements requirement 9 of the assignment specification.
  **/
-void resetStock(VmSystem *system) {}
+void resetStock(VmSystem *system) {
+   Node *currentItem = system->itemList->head;
+
+   printf("Resetting stock count...\n");
+   while (currentItem != NULL) {
+      currentItem->data->onHand = DEFAULT_STOCK_LEVEL;
+
+      currentItem = currentItem->next;
+   }
+}
 
 /**
  * This option will require you to iterate over every coin in the coin
