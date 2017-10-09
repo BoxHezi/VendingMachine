@@ -116,15 +116,6 @@ Boolean loadCoins(VmSystem *system, const char *fileName) {
 Boolean saveStock(VmSystem *system) {
    FILE *fp;
    Node *node;
-   char *itemID = NULL;
-   char *itemName = NULL;
-   char *itemDesc = NULL;
-   char itemPriceDollar[2 + NULL_SPACE];
-   char itemPriceCent[2 + NULL_SPACE];
-   char itemAvailable[2 + NULL_SPACE];
-   unsigned priceDollars;
-   unsigned priceCents;
-   unsigned onHand;
 
    sortListByID(system);
 
@@ -134,31 +125,9 @@ Boolean saveStock(VmSystem *system) {
    node = system->itemList->head;
 
    while (node != NULL) {
-      itemID = node->data->id;
-      itemName = node->data->name;
-      itemDesc = node->data->desc;
-      priceDollars = node->data->price.dollars;
-      priceCents = node->data->price.cents;
-      onHand = node->data->onHand;
-
-      /* convert int to string */
-      sprintf(itemPriceDollar, "%d", priceDollars);
-      sprintf(itemPriceCent, "%02d", priceCents);
-      sprintf(itemAvailable, "%d", onHand);
-
-      /* write to file */
-      fputs(itemID, fp);
-      fputs(STOCK_DELIM, fp);
-      fputs(itemName, fp);
-      fputs(STOCK_DELIM, fp);
-      fputs(itemDesc, fp);
-      fputs(STOCK_DELIM, fp);
-      fputs(itemPriceDollar, fp);
-      fputs(".", fp);
-      fputs(itemPriceCent, fp);
-      fputs(STOCK_DELIM, fp);
-      fputs(itemAvailable, fp);
-      fputs("\n", fp);
+      fprintf(fp, "%s|%s|%s|%u.%02u|%u\n", node->data->id, node->data->name,
+              node->data->desc, node->data->price.dollars,
+              node->data->price.cents, node->data->onHand);
 
       node = node->next;
    }
@@ -194,7 +163,7 @@ void displayItems(VmSystem *system) {
 
    unsigned printSize = 0;
    unsigned totalPrintSize = 0;
-   int i, j;
+   int i;
 
    Node *current;
 
@@ -205,7 +174,7 @@ void displayItems(VmSystem *system) {
     */
 
    /* calculate max id size */
-   for (j = 0; j < system->itemList->size; j++) {
+   for (i = 0; i < system->itemList->size; i++) {
       tempSize = (unsigned) strlen(current->data->id);
       if (idSize < tempSize) {
          idSize = tempSize;
@@ -214,7 +183,7 @@ void displayItems(VmSystem *system) {
    }
 
    current = system->itemList->head;
-   for (j = 0; j < system->itemList->size; j++) {
+   for (i = 0; i < system->itemList->size; i++) {
       tempSize = (unsigned) strlen(current->data->name);
       if (nameSize < tempSize) {
          nameSize = tempSize;
@@ -223,7 +192,7 @@ void displayItems(VmSystem *system) {
    }
 
    current = system->itemList->head;
-   for (j = 0; j < system->itemList->size; j++) {
+   for (i = 0; i < system->itemList->size; i++) {
       tempAmount = current->data->price.dollars * 100
                    + current->data->price.cents;
       tempSize = getNumberLength((tempAmount));
@@ -236,7 +205,7 @@ void displayItems(VmSystem *system) {
    priceSize += 2;
 
    current = system->itemList->head;
-   for (j = 0; j < system->itemList->size; j++) {
+   for (i = 0; i < system->itemList->size; i++) {
       tempAmount = current->data->onHand;
       tempSize = getNumberLength((tempAmount));
       if (onHandSize < tempSize) {

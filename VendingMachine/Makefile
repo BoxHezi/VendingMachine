@@ -32,4 +32,4 @@ clean:
 	rm $(PROGRAM) $(OBJECTS)
 
 archive:
-	zip $(USER)-a2 $(SOURCES) $(HEADERS) Makefile
+	zip $(USER)-a2 $(SOURCES) $(HEADERS) Makefile requirement13.txt
