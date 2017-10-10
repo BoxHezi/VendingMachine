@@ -120,7 +120,7 @@ Boolean saveStock(VmSystem *system) {
    sortListByID(system);
 
    printf("Writing to file...\n");
-   fp = fopen("test.dat", "w");
+   fp = fopen(system->stockFileName, "w");
 
    node = system->itemList->head;
 
@@ -519,7 +519,9 @@ void addItem(VmSystem *system) {
       fgets(nextName, sizeof(nextName), stdin);
       if (strcmp("\n\0", nextName) == 0) {
          printf("Returning to Main Menu...\n");
+         /* free memory allocated when user discard to add item */
          free(newItem);
+         free(newNode);
          return;
       }
 
@@ -538,6 +540,7 @@ void addItem(VmSystem *system) {
       if (strcmp("\n\0", nextDesc) == 0) {
          printf("Returning to Main Menu...\n");
          free(newItem);
+         free(newNode);
          return;
       }
 
@@ -556,6 +559,7 @@ void addItem(VmSystem *system) {
       if (strcmp("\n\0", nextPrice) == 0) {
          printf("Returning to Main Menu...\n");
          free(newItem);
+         free(newNode);
          return;
       }
 
@@ -680,7 +684,11 @@ void removeItem(VmSystem *system) {
    currentItem = system->itemList->head;
    while (currentItem != NULL) {
       if (currentItem->next == itemToDel) {
-         currentItem->next = itemToDel->next;
+         if (itemToDel->next == NULL) {
+            currentItem->next = NULL;
+         } else {
+            currentItem->next = itemToDel->next;
+         }
          break;
       }
       currentItem = currentItem->next;
@@ -689,6 +697,7 @@ void removeItem(VmSystem *system) {
    printf("\"%s - %s %s\" has now been removed from the system.\n",
           itemToDel->data->id, itemToDel->data->name, itemToDel->data->desc);
 
+   free(itemToDel->data);
    free(itemToDel);
    system->itemList->size--;
    reassignID(system);
