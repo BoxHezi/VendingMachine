@@ -12,7 +12,7 @@
 
 /* initialize list */
 List *initList() {
-   List *list = malloc(sizeof(*list));
+   List *list = malloc(sizeof(List));
    if (list == NULL) {
       exit(EXIT_FAILURE);
    } else {
@@ -140,7 +140,9 @@ void reassignID(VmSystem *system) {
    int nonValSize = 0;
    Node *currentItem = system->itemList->head;
    char newID[ID_LEN + NULL_SPACE];
-   char idValInString[1 + NULL_SPACE];
+   /* initialize the idValInString for max 4 digits longs
+    * as the max id can be I9999 */
+   char idValInString[4 + NULL_SPACE];
 
    sortListByID(system);
 
