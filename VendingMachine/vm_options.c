@@ -683,7 +683,12 @@ void removeItem(VmSystem *system) {
 
    currentItem = system->itemList->head;
    while (currentItem != NULL) {
-      if (currentItem->next == itemToDel) {
+
+      /* if the first item in the list need to be removed */
+      if (itemToDel == currentItem) {
+         system->itemList->head = currentItem->next;
+         break;
+      } else if (currentItem->next == itemToDel) {
          if (itemToDel->next == NULL) {
             currentItem->next = NULL;
          } else {
