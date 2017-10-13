@@ -12,4 +12,8 @@
 
 void initCoins(Coin *cashRegister);
 
+void storeCoin(VmSystem *system, char *data);
+
+int denomToValue(int i);
+
 #endif

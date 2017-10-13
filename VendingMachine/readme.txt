@@ -3,3 +3,8 @@
     After user input a valid ID, the item will be removed. 
     At the same time, all ID after the item be removed will shift down.
     For example, if "I0003" is removed, I0004 will become I0003, and I0005 will become I0004.
+
+2. Some color indicator is used.
+    Red for error message, for example when user enter invalid ID
+    Yellow for system message, like when returning to main menu
+    Green for success transcation, for example when user add item, purchase item and remove item

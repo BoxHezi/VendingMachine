@@ -20,6 +20,7 @@ Boolean systemInit(VmSystem *system) {
    system->stockFileName = NULL;
    system->coinFileName = NULL;
 
+
    return TRUE;
 }
 
@@ -69,7 +70,7 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
    stockFile = fopen(fileName, "r");
 
    if (stockFile == NULL) {
-      printf("No stock file found!\n");
+      printf(COLOR_RED "No stock file found!\n" COLOR_RESET);
       return FALSE;
    }
 
@@ -94,17 +95,21 @@ Boolean loadStock(VmSystem *system, const char *fileName) {
  * Loads the coin file data into the system.
  **/
 Boolean loadCoins(VmSystem *system, const char *fileName) {
-
+   char data[MAX_DATA_LENGTH];
 
    FILE *coinsFile;
    coinsFile = fopen(fileName, "r");
 
    if (coinsFile == NULL) {
-      printf("No coins file found");
+      printf(COLOR_RED "No coins file found" COLOR_RESET);
       return FALSE;
    }
 
    system->coinFileName = fileName;
+
+   while (fgets(data, sizeof(data), coinsFile) != NULL) {
+      storeCoin(system, data);
+   }
 
    fclose(coinsFile);
    return TRUE;
@@ -119,7 +124,7 @@ Boolean saveStock(VmSystem *system) {
 
    sortListByID(system);
 
-   printf("Writing to file...\n");
+   printf(COLOR_YELLOW "Writing to file...\n" COLOR_RESET);
    fp = fopen(system->stockFileName, "w");
 
    node = system->itemList->head;
@@ -285,12 +290,12 @@ void purchaseItem(VmSystem *system) {
 
       /* if user hit enter only, bring user back to main menu */
       if (strcmp(itemIDInput, "\n\0") == 0) {
-         printf("Returning to Main Menu...\n");
+         printf(COLOR_YELLOW "Returning to Main Menu...\n" COLOR_RESET);
          return;
       }
 
       if (itemIDInput[strlen(itemIDInput) - 1] != '\n') {
-         printf("Invalid input, try again\n");
+         printf(COLOR_RED "Invalid input, try again\n" COLOR_RESET);
          readRestOfLine();
       } else {
          itemIDInput[strlen(itemIDInput) - 1] = '\0';
@@ -299,7 +304,8 @@ void purchaseItem(VmSystem *system) {
                printf("Item Found\n");
 
                if (currentItem->data->onHand == 0) {
-                  printf("Sorry no more %s\n", currentItem->data->name);
+                  printf(COLOR_RED "Sorry no more %s\n"
+                               COLOR_RESET, currentItem->data->name);
                   available = FALSE;
                   break;
                }
@@ -327,7 +333,7 @@ void purchaseItem(VmSystem *system) {
          if (!available) {
             continue;
          } else if (!itemFound) {
-            printf("Item Not Found\n");
+            printf(COLOR_RED "Item Not Found!\n" COLOR_RESET);
          }
       }
    }
@@ -342,16 +348,17 @@ Boolean makePayment(Node *node) {
    Boolean enoughAmount = FALSE;
 
    while (!priceValid) {
-      printf("You need to give us $%d.%02d: ", node->data->price.dollars, node->data->price.cents);
+      printf("You need to give us $%d.%02d: ",
+             node->data->price.dollars, node->data->price.cents);
       fgets(priceInput, sizeof(priceInput), stdin);
 
       if (strcmp("\n\0", priceInput) == 0) {
-         printf("Returning to menu...\n");
+         printf(COLOR_YELLOW "Returning to menu...\n" COLOR_RESET);
          return FALSE;
       }
 
       if (priceInput[strlen(priceInput) - 1] != '\n') {
-         printf("Invalid, try again\n");
+         printf(COLOR_RED "Invalid, try again\n" COLOR_RESET);
          readRestOfLine();
          continue;
       } else {
@@ -371,7 +378,7 @@ Boolean makePayment(Node *node) {
 
       enoughAmount = checkAmount(node, dollars, cents);
       if (!enoughAmount) {
-         printf("Returning to Main Menu...\n");
+         printf(COLOR_YELLOW "Returning to Main Menu...\n" COLOR_RESET);
          return enoughAmount;
       }
    }
@@ -437,7 +444,8 @@ Boolean checkAmount(Node *itemToPurchase, unsigned dollars, unsigned cents) {
             dollarAmountDue--;
          }
 
-         printf("You still need to give us $%d.%02d: ", dollarAmountDue, centAmountDue);
+         printf("You still need to give us $%d.%02d: ",
+                dollarAmountDue, centAmountDue);
          fgets(priceInput, sizeof(priceInput), stdin);
 
          if (strcmp(priceInput, "\n\0") == 0) {
@@ -445,7 +453,7 @@ Boolean checkAmount(Node *itemToPurchase, unsigned dollars, unsigned cents) {
          }
 
          if (priceInput[strlen(priceInput) - 1] != '\n') {
-            printf("Invalid, try again\n");
+            printf(COLOR_RED "Invalid, try again\n" COLOR_RESET);
             readRestOfLine();
          } else {
             priceInput[strlen(priceInput) - 1] = '\0';
@@ -471,15 +479,14 @@ Boolean checkAmount(Node *itemToPurchase, unsigned dollars, unsigned cents) {
 
    }
 
+   /* calculate change amount */
    change = price - (dollarAmountDue * 100 + centAmountDue);
    dollarChange = change / 100;
    centChange = change % 100;
 
-
-   printf("Thank you, here is your %s, and your change of $%d.%02d.\n",
-          itemToPurchase->data->name,
-          dollarChange, centChange);
-   printf("Please come back soon.\n");
+   printf(COLOR_GREEN "Thank you, here is your %s, and your change of $%d.%02d.\n",
+          itemToPurchase->data->name, dollarChange, centChange);
+   printf("Please come back soon.\n" COLOR_RESET);
 
    return reachAmount;
 }
@@ -518,7 +525,7 @@ void addItem(VmSystem *system) {
       printf("Enter the item name: ");
       fgets(nextName, sizeof(nextName), stdin);
       if (strcmp("\n\0", nextName) == 0) {
-         printf("Returning to Main Menu...\n");
+         printf(COLOR_YELLOW "Returning to Main Menu...\n" COLOR_RESET);
          /* free memory allocated when user discard to add item */
          free(newItem);
          free(newNode);
@@ -526,7 +533,7 @@ void addItem(VmSystem *system) {
       }
 
       if (nextName[strlen(nextName) - 1] != '\n') {
-         printf("Invalid, try again\n");
+         printf(COLOR_RED "Invalid, try again\n" COLOR_RESET);
          readRestOfLine();
       } else {
          nextName[strlen(nextName) - 1] = '\0';
@@ -538,14 +545,14 @@ void addItem(VmSystem *system) {
       printf("Enter the item description: ");
       fgets(nextDesc, sizeof(nextDesc), stdin);
       if (strcmp("\n\0", nextDesc) == 0) {
-         printf("Returning to Main Menu...\n");
+         printf(COLOR_YELLOW "Returning to Main Menu...\n" COLOR_RESET);
          free(newItem);
          free(newNode);
          return;
       }
 
       if (nextDesc[strlen(nextDesc) - 1] != '\n') {
-         printf("Invalid, try again\n");
+         printf(COLOR_RED "Invalid, try again\n" COLOR_RESET);
          readRestOfLine();
       } else {
          nextDesc[strlen(nextDesc) - 1] = '\0';
@@ -557,14 +564,14 @@ void addItem(VmSystem *system) {
       printf("Please enter price for this item: ");
       fgets(nextPrice, sizeof(nextPrice), stdin);
       if (strcmp("\n\0", nextPrice) == 0) {
-         printf("Returning to Main Menu...\n");
+         printf(COLOR_YELLOW "Returning to Main Menu...\n" COLOR_RESET);
          free(newItem);
          free(newNode);
          return;
       }
 
       if (nextPrice[strlen(nextPrice) - 1] != '\n') {
-         printf("Invalid, try again\n");
+         printf(COLOR_RED "Invalid, try again\n" COLOR_RESET);
          readRestOfLine();
       } else {
          nextPrice[strlen(nextPrice) - 1] = '\0';
@@ -591,8 +598,8 @@ void addItem(VmSystem *system) {
    newItem->price.cents = nextCent;
    newItem->onHand = DEFAULT_STOCK_LEVEL;
 
-   printf("This item \"%s - %s.\" has now been added to the menu\n",
-          newItem->name, newItem->desc);
+   printf(COLOR_GREEN "This item \"%s - %s.\" has now been added to the menu\n"
+         COLOR_RESET, newItem->name, newItem->desc);
 
    createNode(newItem, newNode);
    addToList(system->itemList, newNode);
@@ -609,7 +616,7 @@ char *generateID(VmSystem *system, char nextID[]) {
     */
    int largestIDVal = system->itemList->size;
    int nextIDVal = largestIDVal + 1;
-   char nextIDValInString[1 + NULL_SPACE];
+   char nextIDValInString[4 + NULL_SPACE];
 
    int i = 0;
 
@@ -655,12 +662,12 @@ void removeItem(VmSystem *system) {
       printf("Enter the item id of the item to remove from the menu: ");
       fgets(idInput, sizeof(idInput), stdin);
       if (strcmp(idInput, "\n\0") == 0) {
-         printf("Returning to main menu...\n");
+         printf(COLOR_YELLOW "Returning to main menu...\n" COLOR_RESET);
          return;
       }
 
       if (idInput[strlen(idInput) - 1] != '\n') {
-         printf("Invalid, try again!\n");
+         printf(COLOR_RED "Invalid, try again!\n" COLOR_RESET);
          readRestOfLine();
       } else {
          idInput[strlen(idInput) - 1] = '\0';
@@ -676,7 +683,7 @@ void removeItem(VmSystem *system) {
          }
 
          if (!itemFound) {
-            printf("No such item found!\n");
+            printf(COLOR_RED "No such item found!\n" COLOR_RESET);
          }
       }
    }
@@ -688,7 +695,9 @@ void removeItem(VmSystem *system) {
       if (itemToDel == currentItem) {
          system->itemList->head = currentItem->next;
          break;
-      } else if (currentItem->next == itemToDel) {
+      }
+      /* if the last item need to be removed */
+      else if (currentItem->next == itemToDel) {
          if (itemToDel->next == NULL) {
             currentItem->next = NULL;
          } else {
@@ -699,8 +708,9 @@ void removeItem(VmSystem *system) {
       currentItem = currentItem->next;
    }
 
-   printf("\"%s - %s %s\" has now been removed from the system.\n",
-          itemToDel->data->id, itemToDel->data->name, itemToDel->data->desc);
+   printf(COLOR_GREEN "\"%s - %s %s\" has now been removed from the system.\n"
+         COLOR_RESET, itemToDel->data->id, itemToDel->data->name,
+          itemToDel->data->desc);
 
    free(itemToDel->data);
    free(itemToDel);
@@ -715,7 +725,37 @@ void removeItem(VmSystem *system) {
  * This function implements part 4 of requirement 18 in the assignment
  * specifications.
  **/
-void displayCoins(VmSystem *system) {}
+void displayCoins(VmSystem *system) {
+   int i = 0;
+   int actualValue = 0;
+   int printSize = 0;
+
+   printf("Denomination | Count\n");
+
+   for (i = 7; i >= 0; i--) {
+      actualValue = denomToValue(system->cashRegister[i].denom);
+      if (actualValue >= 100) {
+         actualValue /= 100;
+         printf("%d dollars", actualValue);
+         printSize = getNumberLength((unsigned) actualValue) + 8;
+         /* print out space */
+         while (printSize < strlen("Denomination")) {
+            printf(" ");
+            printSize++;
+         }
+      } else {
+         printf("%d cents", actualValue);
+         printSize = getNumberLength((unsigned) actualValue) + 6;
+         while (printSize < strlen("Denomination")) {
+            printf(" ");
+            printSize++;
+         }
+      }
+      printf(" | ");
+      printf("%d\n", system->cashRegister[i].count);
+   }
+
+}
 
 /**
  * This option will require you to iterate over every stock in the
