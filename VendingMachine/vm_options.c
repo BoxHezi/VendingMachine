@@ -524,6 +524,8 @@ void addItem(VmSystem *system) {
    char nextDesc[DESC_LEN + EXTRA_SPACES];
    char *priceSeparator = ".";
 
+   int letterToUpper = 0;
+
    /* +1 for the dot */
    char nextPrice[MAX_PRICE_LENGTH + EXTRA_SPACES + 1];
    unsigned nextDollar = 0;
@@ -600,6 +602,17 @@ void addItem(VmSystem *system) {
          } else {
             break;
          }
+      }
+   }
+
+   /* change the first letter to upper case
+    * to avoid miss match.*/
+   for (letterToUpper = 0; letterToUpper < strlen(nextName); letterToUpper++) {
+      if (letterToUpper == 0) {
+         nextName[letterToUpper] = toupper(nextName[letterToUpper]);
+      }
+      if (nextName[letterToUpper] == ' ') {
+         nextName[letterToUpper + 1] = toupper(nextName[letterToUpper + 1]);
       }
    }
 
@@ -793,7 +806,14 @@ void resetStock(VmSystem *system) {
  * This requirement implements part 3 of requirement 18 in the
  * assignment specifications.
  **/
-void resetCoins(VmSystem *system) {}
+void resetCoins(VmSystem *system) {
+   int i = 0;
+
+   for (i = 0; i < 8; i++ ) {
+      system->cashRegister[i].count = DEFAULT_COIN_COUNT;
+   }
+
+}
 
 /**
  * This option will require you to display goodbye and free the system.
