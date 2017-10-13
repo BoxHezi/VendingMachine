@@ -1,3 +1,14 @@
+/******************************************************************************
+
+** Student Name: Boxuan Lu
+
+** Student Number: s3654900
+
+** Date of submission: <Fri, 13 Oct 2017>
+
+** Course: COSC1076 / COSC2207, Semester 2, 2017
+
+******************************************************************************/
 
 1. for the removeItem.
     After user input a valid ID, the item will be removed. 
