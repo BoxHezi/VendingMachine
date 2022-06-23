@@ -29,9 +29,10 @@ typedef void (*MenuFunction)(VmSystem *);
 /**
  * Represents a menu item to be displayed and executed in the program.
  **/
-typedef struct menu_item {
-   char text[MENU_NAME_LEN + NULL_SPACE];
-   MenuFunction function;
+typedef struct menu_item
+{
+    char text[MENU_NAME_LEN + NULL_SPACE];
+    MenuFunction function;
 } MenuItem;
 
 void initMenu(MenuItem *menu);

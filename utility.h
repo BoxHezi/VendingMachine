@@ -34,7 +34,7 @@ typedef enum boolean {
 #define COLOR_RESET "\x1b[0m"
 
 /**
- * This is used to compensate for the extra character spaces taken up by
+ * This is used to compensate for the extra character spacesF taken up by
  * the '\n' and '\0' when input is read through fgets().
  **/
 #define EXTRA_SPACES (NEW_LINE_SPACE + NULL_SPACE)
