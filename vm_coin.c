@@ -89,38 +89,23 @@ void storeCoin(VmSystem *system, char *data)
 
 int denomToValue(int i)
 {
-    if (i == 0)
+    switch (i)
     {
-        i = 5;
+    case 0:
+        return 5;
+    case 1:
+        return 10;
+    case 2:
+        return 20;
+    case 3:
+        return 50;
+    case 4:
+        return 100;
+    case 5:
+        return 200;
+    case 6:
+        return 500;
+    case 7:
+        return 1000;
     }
-    else if (i == 1)
-    {
-        i = 10;
-    }
-    else if (i == 2)
-    {
-        i = 20;
-    }
-    else if (i == 3)
-    {
-        i = 50;
-    }
-    else if (i == 4)
-    {
-        i = 100;
-    }
-    else if (i == 5)
-    {
-        i = 200;
-    }
-    else if (i == 6)
-    {
-        i = 500;
-    }
-    else if (i == 7)
-    {
-        i = 1000;
-    }
-
-    return i;
 }
